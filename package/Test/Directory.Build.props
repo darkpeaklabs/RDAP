@@ -1,0 +1,12 @@
+<Project>
+
+  <PropertyGroup>
+	  <RootNamespace>DarkPeakLabs.Rdap.Test</RootNamespace>
+	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	  <NoWarn>7035</NoWarn>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+</Project>

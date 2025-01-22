@@ -1,0 +1,20 @@
+<Project>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageVersion Include="CsvHelper" Version="33.0.1" />
+    <PackageVersion Include="DarkPeakLabs.PublicSuffix" Version="1.0.5" />
+    <PackageVersion Include="IPAddressRange" Version="6.1.0" />
+    <PackageVersion Include="LazyCache" Version="2.4.0" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="9.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.4" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="9.0.1" />
+    <PackageVersion Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageVersion Include="System.Text.Json" Version="6.0.11" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.2" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="3.6.0" />
+    <PackageVersion Include="MSTest.TestFramework" Version="3.6.0" />
+    <PackageVersion Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+  </ItemGroup>
+</Project>

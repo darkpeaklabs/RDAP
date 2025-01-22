@@ -1,0 +1,63 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{55778FDB-351F-44EB-A798-67F797158CB7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IANARegistry.Test", "Test\IANARegistry.Test\IANARegistry.Test.csproj", "{8FD33879-9F16-4759-8138-E50AEF52CEAF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{2B0E32D7-A9AC-432F-A233-7C01FC5FE149}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IANARegistry", "Utilities\IANARegistry\IANARegistry.csproj", "{EEE7D6DC-87DA-43D1-911E-BF815CCF766E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RdapUtils", "Utilities\RdapUtils\RdapUtils.csproj", "{F27B448C-0A9B-4FE2-9653-706232FA4E76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RdapClient", "RdapClient\RdapClient.csproj", "{A641C174-B5FB-4068-B6CD-4F55A3335AC8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RdapClient.Test", "Test\RdapClient.Test\RdapClient.Test.csproj", "{F5C7DF0D-A703-45B7-9216-D10D9CFF705A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DomainList.Test", "Test\DomainList.Test\DomainList.Test.csproj", "{BB33E022-8FC9-4D92-BA07-C2FF2F89A9D0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8FD33879-9F16-4759-8138-E50AEF52CEAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FD33879-9F16-4759-8138-E50AEF52CEAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FD33879-9F16-4759-8138-E50AEF52CEAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FD33879-9F16-4759-8138-E50AEF52CEAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEE7D6DC-87DA-43D1-911E-BF815CCF766E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEE7D6DC-87DA-43D1-911E-BF815CCF766E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEE7D6DC-87DA-43D1-911E-BF815CCF766E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEE7D6DC-87DA-43D1-911E-BF815CCF766E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F27B448C-0A9B-4FE2-9653-706232FA4E76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F27B448C-0A9B-4FE2-9653-706232FA4E76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F27B448C-0A9B-4FE2-9653-706232FA4E76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F27B448C-0A9B-4FE2-9653-706232FA4E76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A641C174-B5FB-4068-B6CD-4F55A3335AC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A641C174-B5FB-4068-B6CD-4F55A3335AC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A641C174-B5FB-4068-B6CD-4F55A3335AC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A641C174-B5FB-4068-B6CD-4F55A3335AC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5C7DF0D-A703-45B7-9216-D10D9CFF705A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5C7DF0D-A703-45B7-9216-D10D9CFF705A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5C7DF0D-A703-45B7-9216-D10D9CFF705A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5C7DF0D-A703-45B7-9216-D10D9CFF705A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB33E022-8FC9-4D92-BA07-C2FF2F89A9D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB33E022-8FC9-4D92-BA07-C2FF2F89A9D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB33E022-8FC9-4D92-BA07-C2FF2F89A9D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB33E022-8FC9-4D92-BA07-C2FF2F89A9D0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8FD33879-9F16-4759-8138-E50AEF52CEAF} = {55778FDB-351F-44EB-A798-67F797158CB7}
+		{EEE7D6DC-87DA-43D1-911E-BF815CCF766E} = {2B0E32D7-A9AC-432F-A233-7C01FC5FE149}
+		{F27B448C-0A9B-4FE2-9653-706232FA4E76} = {2B0E32D7-A9AC-432F-A233-7C01FC5FE149}
+		{F5C7DF0D-A703-45B7-9216-D10D9CFF705A} = {55778FDB-351F-44EB-A798-67F797158CB7}
+		{BB33E022-8FC9-4D92-BA07-C2FF2F89A9D0} = {55778FDB-351F-44EB-A798-67F797158CB7}
+	EndGlobalSection
+EndGlobal

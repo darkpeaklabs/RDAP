@@ -1,0 +1,17 @@
+<Project>
+
+  <PropertyGroup>
+	  <RootNamespace>DarkPeakLabs.Rdap</RootNamespace>
+	  <AssemblyVersion>1.0.*</AssemblyVersion>
+	  <Deterministic>false</Deterministic>
+
+	  <EnableNETAnalyzers>true</EnableNETAnalyzers>
+	  <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	  <NoWarn>7035</NoWarn>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+</Project>

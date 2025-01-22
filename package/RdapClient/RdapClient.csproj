@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+	  <TargetFrameworks>netstandard2.1;net6.0;net8.0</TargetFrameworks>
+	  <LangVersion>12.0</LangVersion>
+	  <AssemblyName>DarkPeakLabs.RdapClient</AssemblyName>
+
+	  <PackageId>DarkPeakLabs.RdapClient</PackageId>
+	  <Version>1.0.1</Version>
+	  <Authors>DarkPeakLabs</Authors>
+	  <Company>DarkPeakLabs</Company>
+	  <Product>DarkPeakLabs.RdapClient</Product>
+	  <Title>RDAP Library</Title>
+	  <Description>A .net library for RDAP</Description>
+	  <PackageProjectUrl>https://github.com/darkpeaklabs/RDAP</PackageProjectUrl>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
+	  <RepositoryUrl>https://github.com/darkpeaklabs/RDAP</RepositoryUrl>
+	  <RepositoryType>git</RepositoryType>
+	  <IncludeSymbols>True</IncludeSymbols>
+	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+	  <Copyright>Copyright (c) DarkPeakLabs 2024</Copyright>
+	  <PackageTags>RDAP;WHOIS;dns;domain;domain name</PackageTags>
+	  <PackageReleaseNotes>https://github.com/darkpeaklabs/RDAP/blob/main/CHANGELOG.md</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IPAddressRange" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="System.ComponentModel.Annotations" />
+    <PackageReference Include="System.Text.Json" />
+    <PackageReference Include="LazyCache" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Client\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

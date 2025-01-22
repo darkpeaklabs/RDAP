@@ -1,0 +1,75 @@
+{
+  "objectClassName": "entity",
+  "vcardArray": [
+    "foo",
+    [
+      [
+        "version",
+        {},
+        "text",
+        "4.0"
+      ],
+      [
+        "fn",
+        {},
+        "text",
+        "Firstname Lastname"
+      ],
+      [
+        "adr",
+        {
+          "cc": "nl"
+        },
+        "text",
+        [
+          "",
+          "",
+          "Ceintuurbaan 28",
+          "Zwolle",
+          "Overijssel",
+          "8024AA",
+          "Netherlands"
+        ]
+      ]
+    ]
+  ],
+  "entities": [
+    {
+      "objectClassName": "entity",
+      "vcardArray": [
+        "vcard",
+        {},
+        [
+          [
+            "version",
+            {},
+            "text",
+            "4.0"
+          ],
+          [
+            "fn",
+            {},
+            "text",
+            "Firstname Lastname"
+          ],
+          [
+            "adr",
+            {
+              "cc": "nl"
+            },
+            "text",
+            [
+              "",
+              "",
+              "Ceintuurbaan 28",
+              "Zwolle",
+              "Overijssel",
+              "8024AA",
+              "Netherlands"
+            ]
+          ]
+        ]
+      ]
+    }
+  ]
+}

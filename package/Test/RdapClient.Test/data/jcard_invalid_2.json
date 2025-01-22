@@ -1,0 +1,18 @@
+{
+  "objectClassName": "entity",
+  "vcardArray": [
+    "vcard",
+    [
+      "version",
+      {},
+      "text",
+      "4.0"
+    ],
+    [
+      "fn",
+      {},
+      "text",
+      "Firstname Lastname"
+    ]
+  ]
+}
