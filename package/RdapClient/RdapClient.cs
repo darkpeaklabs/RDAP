@@ -119,9 +119,9 @@ public sealed class RdapClient : IDisposable
         return await GetDataAsync<RdapDomainLookupResponse>(serviceUri, new Uri($"domain/{domain}", UriKind.Relative)).ConfigureAwait(false);
     }
 
-    public async Task<RdapLookupResult<RdapDomainLookupResponse>> DomainLookupAsync(Uri uri)
+    public async Task<RdapLookupResult<RdapDomainLookupResponse>> DomainLookupAsync(Uri requestUri)
     {
-        return await GetDataAsync<RdapDomainLookupResponse>(uri).ConfigureAwait(false);
+        return await GetDataAsync<RdapDomainLookupResponse>(requestUri).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -233,21 +233,21 @@ public sealed class RdapClient : IDisposable
 
     private async Task<RdapLookupResult<T>> GetDataAsync<T>(Uri serviceUri, Uri relativeUri) where T : class
     {
-        return await GetDataAsync<T>(new Uri(serviceUri, relativeUri)).ConfigureAwait(false);
+        return await GetDataAsync<T>(GetRequestUri(serviceUri, relativeUri)).ConfigureAwait(false);
     }
 
-    private async Task<RdapLookupResult<T>> GetDataAsync<T>(Uri uri) where T : class
+    private async Task<RdapLookupResult<T>> GetDataAsync<T>(Uri requestUri) where T : class
     {
         RdapLookupResult<T> result = new()
         {
             Conformance = new RdapConformance(_logger)
         };
 
-        _logger?.LogInformation("Sending request to RDAP web service. Query URL = {Url}", uri);
+        _logger?.LogInformation("Sending request to RDAP web service. Query URL = {Url}", requestUri);
 
         try
         {
-            using var response = await httpClient.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+            using var response = await httpClient.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
             result.RequestSent = httpClientHandler.RequestSent;
             result.ResponseReceived = httpClientHandler.ResponseReceived;
 
@@ -265,7 +265,7 @@ public sealed class RdapClient : IDisposable
                     }
                 }
 
-                _logger?.LogDebug("Server responded {StatusCode} - url:{RdapQuery}, content length: {ContentLength}", response.StatusCode, uri, response.Content.Headers.ContentLength);
+                _logger?.LogDebug("Server responded {StatusCode} - url:{RdapQuery}, content length: {ContentLength}", response.StatusCode, requestUri, response.Content.Headers.ContentLength);
 
                 result.DataReadStarted = DateTime.UtcNow;
                 result.RawJson = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -273,7 +273,7 @@ public sealed class RdapClient : IDisposable
             }
             else
             {
-                _logger?.LogError("Server responded {StatusCode} - url:{RdapQuery}, content length: {ContentLength}", response.StatusCode, uri, response.Content.Headers.ContentLength);
+                _logger?.LogError("Server responded {StatusCode} - url:{RdapQuery}, content length: {ContentLength}", response.StatusCode, requestUri, response.Content.Headers.ContentLength);
                 throw new RdapRequestException(response);
             }
         }
@@ -282,7 +282,7 @@ public sealed class RdapClient : IDisposable
             result.RequestSent = httpClientHandler.RequestSent;
             result.RequestFailed = DateTime.UtcNow;
 
-            _logger?.LogError("RDAP client timeout - url:{RdapQuery}, Error: {Error}", uri, $"RDAP server did not respond in allocated time {httpClient.Timeout}");
+            _logger?.LogError("RDAP client timeout - url:{RdapQuery}, Error: {Error}", requestUri, $"RDAP server did not respond in allocated time {httpClient.Timeout}");
             throw new RdapClientTimeoutException($"RDAP server did not respond in allocated time {httpClient.Timeout}", exception);
         }
         catch (HttpRequestException exception)
@@ -290,7 +290,7 @@ public sealed class RdapClient : IDisposable
             result.RequestSent = httpClientHandler.RequestSent;
             result.RequestFailed = DateTime.UtcNow;
 
-            _logger?.LogError("Error sending request to RDAP Server - url:{RdapQuery}, Error: {Error}", uri, exception.Message);
+            _logger?.LogError("Error sending request to RDAP Server - url:{RdapQuery}, Error: {Error}", requestUri, exception.Message);
             throw new RdapHttpException("Error sending request to RDAP Server", exception);
         }
         catch (Exception)
@@ -314,6 +314,16 @@ public sealed class RdapClient : IDisposable
         {
             throw new RdapJsonException(exception.Message, result.RawJson, exception.InnerException);
         }
+    }
+
+    private static Uri GetRequestUri(Uri serviceUri, Uri relativeUri)
+    {
+        if (serviceUri.AbsoluteUri.EndsWith('/'))
+        {
+            return new Uri(serviceUri, relativeUri);
+        }
+
+        return new Uri(new Uri($"{serviceUri.AbsoluteUri}/"), relativeUri);
     }
 
     private void Dispose(bool disposing)

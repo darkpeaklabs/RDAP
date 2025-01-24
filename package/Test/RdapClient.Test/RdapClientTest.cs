@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace DarkPeakLabs.Rdap.Test;
 
 [TestClass]
-public class DomainTest
+public class RdapClientTest
 {
     private readonly RdapDnsBootstrap bootstrap = new RdapDnsBootstrap();
 
@@ -21,6 +21,9 @@ public class DomainTest
     {
         using RdapClient service = new RdapClient();
         var result = service.DomainLookupAsync(new Uri("https://rdap.verisign.com/com/v1/"), "microsoft.com").GetAwaiter().GetResult();
+
+        result = service.DomainLookupAsync(new Uri("https://rdap.markmonitor.com/rdap/"), "microsoft.com").GetAwaiter().GetResult();
+        result = service.DomainLookupAsync(new Uri("https://rdap.markmonitor.com/rdap"), "microsoft.com").GetAwaiter().GetResult();        
     }
 
     [TestMethod]
