@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.CorporateDomains.Rdap.Test;
+namespace DarkPeakLabs.Rdap.Utilities;
 
 public interface IDomainList
 {

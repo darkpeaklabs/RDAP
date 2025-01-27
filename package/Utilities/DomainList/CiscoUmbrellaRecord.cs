@@ -1,4 +1,4 @@
-﻿namespace Microsoft.CorporateDomains.Rdap.Test
+﻿namespace DarkPeakLabs.Rdap.Utilities
 {
     public class CiscoUmbrellaRecord : IDomainListRecord
     {

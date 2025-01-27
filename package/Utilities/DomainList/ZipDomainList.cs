@@ -5,7 +5,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Microsoft.CorporateDomains.Rdap.Test
+namespace DarkPeakLabs.Rdap.Utilities
 {
     public abstract class ZipDomainList<T> : DomainList<T> where T : IDomainListRecord
     {

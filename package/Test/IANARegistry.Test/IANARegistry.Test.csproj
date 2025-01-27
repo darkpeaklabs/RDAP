@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <RootNamespace>Microsoft.CorporateDomains.Rdap.Test</RootNamespace>
+    <RootNamespace>DarkPeakLabs.Rdap.Test</RootNamespace>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 

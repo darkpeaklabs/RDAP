@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.CorporateDomains.Rdap.Test
+namespace DarkPeakLabs.Rdap.Utilities
 {
-    public class MajesticDomainList : DomainList<MajesticRecord>
+    public class CiscoUmbrellaDomainList : ZipDomainList<CiscoUmbrellaRecord>
     {
         public override async Task<IReadOnlyCollection<string>> GetDomainsAsync(bool useCache)
         {
             return await GetDomainsAsync(
-                "majestic",
-                new Uri("https://downloads.majestic.com/majestic_million.csv"),
-                hasHeaderRecord: true,
+                "cisco-umbrella",
+                new Uri("https://s3-us-west-1.amazonaws.com/umbrella-static/top-1m.csv.zip"),
+                hasHeaderRecord: false,
                 useCache)
             .ConfigureAwait(false);
         }

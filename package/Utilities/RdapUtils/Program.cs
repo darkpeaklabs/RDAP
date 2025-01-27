@@ -39,6 +39,8 @@ internal sealed class Program
         },
         pathOption);
 
+        rootCommand.AddCommand(generateCodeCommand);
+        rootCommand.Invoke(args);
     }
 
     private static void GenerateCode(string solutionRoot)

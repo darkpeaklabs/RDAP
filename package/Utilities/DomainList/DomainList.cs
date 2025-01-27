@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using CsvHelper;
 using CsvHelper.Configuration;
 
-namespace Microsoft.CorporateDomains.Rdap.Test
+namespace DarkPeakLabs.Rdap.Utilities
 {
     //From: https://github.com/PeterDaveHello/top-1m-domains?tab=readme-ov-file
     //-------------------------------------------------------------------------

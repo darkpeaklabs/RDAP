@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>DarkPeakLabs.Rdap.Utilities.DomainLst</AssemblyName>
+  </PropertyGroup>
+  
+	<ItemGroup>
+	  <PackageReference Include="CsvHelper" />
+	</ItemGroup>
+  
+	<ItemGroup>
+	  <ProjectReference Include="..\..\RdapClient\RdapClient.csproj" />
+	</ItemGroup>
+
+</Project>

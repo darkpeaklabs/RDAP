@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.CorporateDomains.Rdap.Test
+namespace DarkPeakLabs.Rdap.Utilities
 {
-    public class DomCopDomainList : ZipDomainList<CiscoUmbrellaRecord>
+    public class BuiltWithDomainList : ZipDomainList<CiscoUmbrellaRecord>
     {
         public override async Task<IReadOnlyCollection<string>> GetDomainsAsync(bool useCache)
         {
             return await GetDomainsAsync(
-                "domcop",
-                new Uri("https://www.domcop.com/files/top/top10milliondomains.csv.zip"),
-                hasHeaderRecord: true,
+                "builtwith",
+                new Uri("https://builtwith.com/dl/builtwith-top1m.zip"),
+                hasHeaderRecord: false,
                 useCache)
             .ConfigureAwait(false);
         }

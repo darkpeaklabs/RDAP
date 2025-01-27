@@ -1,6 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using DarkPeakLabs.Rdap.Utilities;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Microsoft.CorporateDomains.Rdap.Test;
+namespace DarkPeakLabs.Rdap.Test;
 
 [TestClass]
 public class DomainListTest

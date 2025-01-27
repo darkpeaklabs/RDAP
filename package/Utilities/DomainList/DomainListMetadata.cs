@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Microsoft.CorporateDomains.Rdap.Test
+namespace DarkPeakLabs.Rdap.Utilities
 {
     public class DomainListMetadata
     {
