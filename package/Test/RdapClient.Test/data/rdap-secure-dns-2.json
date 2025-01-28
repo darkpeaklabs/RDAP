@@ -1,0 +1,11 @@
+{
+  "delegationSigned": true,
+  "dsData": [
+    {
+      "keyTag": 59840,
+      "algorithm": 13,
+      "digestType": 2,
+      "digest": "CAAB254A5540647BB060ED883E41E9AC240AA5EB8496E58C40EF5CB61836CA43"
+    }
+  ]
+}

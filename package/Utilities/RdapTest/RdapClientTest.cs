@@ -179,9 +179,16 @@ public class RdapClientTest
             case RdapJsonException jsonException:
                 {
                     errorCode = "Json";
-                    filename = $"{Guid.NewGuid}.json";
-                    string jsonPath = Path.Combine(_resultPath, "json", filename);
-                    using StreamWriter jsonWriter = new StreamWriter(jsonPath, false);
+                    filename = $"{Guid.NewGuid()}.json";
+                    string jsonPath = Path.Combine(_resultPath, "json");
+                    lock (_lock)
+                    {
+                        if (!Directory.Exists(jsonPath))
+                        {
+                            Directory.CreateDirectory(jsonPath);
+                        }
+                    }
+                    using StreamWriter jsonWriter = new StreamWriter(Path.Combine(jsonPath, filename), false);
                     jsonWriter.Write(jsonException.Json);
                 }
                 break;

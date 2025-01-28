@@ -1,23 +1,14 @@
-﻿using DarkPeakLabs.Rdap.Conformance;
+﻿using System.Linq;
+using DarkPeakLabs.Rdap.Conformance;
 using DarkPeakLabs.Rdap.Serialization;
 using DarkPeakLabs.Rdap.Values.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 
 namespace DarkPeakLabs.Rdap.Test
 {
     [TestClass]
-    public class UnitTestEntity
+    public class RdapEntityTest : JsonTestBase
     {
-        private static string ReadJsonFile(string filename)
-        {
-            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "data", filename);
-            using StreamReader reader = new StreamReader(path);
-            return reader.ReadToEnd();
-        }
-
         [TestMethod]
         public void TestJCardParser()
         {

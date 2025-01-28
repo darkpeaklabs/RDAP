@@ -45,7 +45,20 @@ internal sealed class Program
         },
         pathOption);
 
+        var parseCommand = new Command("parse", "Parse JSON files")
+        {
+            pathOption
+        };
+        parseCommand.SetHandler((fileInfo) =>
+        {
+            string path = fileInfo.FullName;
+            var test = new RdapJsonParser(path);
+            test.Run();
+        },
+        pathOption);
+
         rootCommand.AddCommand(testCommand);
+        rootCommand.AddCommand(parseCommand);
         rootCommand.Invoke(args);
     }
 }
