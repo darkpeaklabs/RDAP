@@ -1,6 +1,6 @@
 ﻿namespace DarkPeakLabs.Rdap
 {
-    using DarkPeakLabs.Rdap.Values.Json;
+    using DarkPeakLabs.Rdap.Values;
     using System.Collections.Generic;
 
     /// <summary>
@@ -8,6 +8,11 @@
     /// </summary>
     public class RdapContact
     {
+        public RdapContact()
+        {
+            Kind = RdapContactKind.Unknown;
+        }
+
         /// <summary>
         /// The full name(s) of a contact (e.g. the personal name and surname of an individual, the name of an organization)
         /// </summary>
@@ -21,26 +26,26 @@
         /// <summary>
         /// Components of entity name
         /// </summary>
-        public IReadOnlyCollection<string> Names { get; set; }
+        public IReadOnlyList<string> Names { get; set; }
 
         /// <summary>
         /// entity nicknames
         /// </summary>
-        public IReadOnlyCollection<string> Nicknames { get; set; }
+        public IReadOnlyList<string> Nicknames { get; set; }
 
         /// <summary>
         /// entity address
         /// </summary>
-        public IReadOnlyCollection<string> Address { get; set; }
+        public IReadOnlyList<string> Address { get; set; }
 
         /// <summary>
         /// entity phone numbers
         /// </summary>
-        public IReadOnlyCollection<RdapContactPhoneNumber> PhoneNumbers { get; set; }
+        public IReadOnlyList<RdapContactPhoneNumber> PhoneNumbers { get; set; }
 
         /// <summary>
         /// entity email address
         /// </summary>
-        public IReadOnlyCollection<string> Emails { get; set; }
+        public IReadOnlyList<string> Emails { get; set; }
     }
 }

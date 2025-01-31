@@ -240,7 +240,7 @@ public sealed class RdapClient : IDisposable
     {
         RdapLookupResult<T> result = new()
         {
-            Conformance = new RdapConformance(_logger)
+            Conformance = new()
         };
 
         _logger?.LogInformation("Sending request to RDAP web service. Query URL = {Url}", requestUri);
@@ -302,17 +302,14 @@ public sealed class RdapClient : IDisposable
 
         try
         {
-            result.Value = RdapSerializer.Deserialize<T>(result.RawJson, out var jsonConformance);
-            if (jsonConformance.HasConformanceViolations)
-            {
-                result.Conformance.AddViolations(jsonConformance.Violations);
-            }
+            result.Value = RdapSerializer.Deserialize<T>(result.RawJson, result.Conformance);
             _logger?.LogWarning("Found {ConformanceViolationCount} RDAP conformance violations.", result.Conformance.Violations.Count);
             return result;
         }
         catch (RdapJsonException exception)
         {
-            throw new RdapJsonException(exception.Message, result.RawJson, exception.InnerException);
+            exception.Json = result.RawJson;
+            throw;
         }
     }
 

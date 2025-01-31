@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 
 namespace DarkPeakLabs.Rdap.Serialization
 {
@@ -11,14 +10,26 @@ namespace DarkPeakLabs.Rdap.Serialization
         /// <param name="value"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        internal static bool TryParseString<T>(string value, out T result, ILogger logger = null) where T : struct
+        internal static bool TryParseString<T>(string value, out T result) where T : struct
         {
-            logger?.LogDebug("Trying to convert string value {Value} to type {EnumType}", value, typeof(T).Name);
-            return Enum.TryParse<T>(value
+            return Enum.TryParse(
+                value
                 .Replace(" ", "", StringComparison.Ordinal)
                 .Replace("-", "", StringComparison.Ordinal)
                 .Replace(".", "", StringComparison.Ordinal)
                 .Replace("_", "", StringComparison.Ordinal), true, out result);
+        }
+
+        internal static bool TryParseString(string value, Type enumType, out object result)
+        {
+            return Enum.TryParse(
+                enumType,
+                value.Replace(" ", "", StringComparison.Ordinal)
+                    .Replace("-", "", StringComparison.Ordinal)
+                    .Replace(".", "", StringComparison.Ordinal)
+                    .Replace("_", "", StringComparison.Ordinal),
+                ignoreCase: true,
+                out result);
         }
     }
 }

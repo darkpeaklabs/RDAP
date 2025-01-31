@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text.Json;
 
 namespace DarkPeakLabs.Rdap
@@ -8,7 +8,7 @@ namespace DarkPeakLabs.Rdap
     /// </summary>
     public class RdapJsonException : RdapException
     {
-        public string Json { get; private set; }
+        public string Json { get; internal set; }
 
         public JsonTokenType? TokenType { get; private set; }
         public int? CurrentDepth { get; private set; }

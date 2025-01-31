@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DarkPeakLabs.Rdap.Values.DnsSec
+namespace DarkPeakLabs.Rdap.Values
 {
     /// <summary>
     /// the algorithm of the DNSKEY RR referred to by the DS record
@@ -11,7 +11,7 @@ namespace DarkPeakLabs.Rdap.Values.DnsSec
     /// <summary>
     ///   DNSSEC algorithm type
     /// </summary>
-    public enum AlgorithmType
+    public enum DnsSecAlgorithmType
     {
         Unknown,
 

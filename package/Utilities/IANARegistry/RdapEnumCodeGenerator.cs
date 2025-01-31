@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using DarkPeakLabs.Rdap.Values.Json;
+using DarkPeakLabs.Rdap.Values;
 
 namespace DarkPeakLabs.Rdap.Utilities;
 

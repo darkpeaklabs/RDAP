@@ -42,18 +42,18 @@ namespace DarkPeakLabs.Rdap.Serialization
                     conformance.AddJsonViolation(RdapConformanceViolationSeverity.Warning, ref reader, "Found a number instead of expected array of strings");
                     return new string[] { reader.GetInt32().ToString(CultureInfo.InvariantCulture) };
 
-                case JsonTokenType.StartArray:
-                    List<string> strings = new List<string>();
-                    RdapStringConverter stringConverter = new RdapStringConverter(conformance, _logger);
-                    while (reader.Read())
-                    {
-                        if (reader.TokenType == JsonTokenType.EndArray)
-                        {
-                            break;
-                        }
-                        strings.Add(stringConverter.Read(ref reader, typeof(string), options));
-                    }
-                    return strings;
+                //case JsonTokenType.StartArray:
+                //    List<string> strings = new List<string>();
+                //    RdapStringConverter stringConverter = new RdapStringConverter(conformance, _logger);
+                //    while (reader.Read())
+                //    {
+                //        if (reader.TokenType == JsonTokenType.EndArray)
+                //        {
+                //            break;
+                //        }
+                //        strings.Add(stringConverter.Read(ref reader, typeof(string), options));
+                //    }
+                //    return strings;
 
                 default:
                     throw new RdapJsonException($"Unexpected token type {reader.TokenType} when reading list of strings", ref reader);

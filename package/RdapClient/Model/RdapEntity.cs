@@ -1,4 +1,4 @@
-﻿using DarkPeakLabs.Rdap.Values.Json;
+﻿using DarkPeakLabs.Rdap.Values;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -20,31 +20,31 @@ namespace DarkPeakLabs.Rdap
         /// an array of strings, each signifying the relationship an object would have with its closest containing object
         /// </summary>
         [JsonPropertyName("roles")]
-        public IReadOnlyCollection<RdapEntityRole> Roles { get; set; }
+        public IReadOnlyList<RdapEntityRole> Roles { get; set; }
 
         /// <summary>
         /// List of public identifiers to an object class
         /// </summary>
         [JsonPropertyName("publicIds")]
-        public IReadOnlyCollection<RdapPublicId> PublicIds { get; set; }
+        public IReadOnlyList<RdapPublicId> PublicIds { get; set; }
 
         /// <summary>
         /// this data structure takes the same form as the events data structure(see Section 4.5), but each object in the array MUST NOT have an "eventActor" member.These objects denote
         /// that the entity is an event actor for the given events.  See Appendix B regarding the various ways events can be modeled
         /// </summary>
         [JsonPropertyName("asEventActor")]
-        public IReadOnlyCollection<RdapEvent> AsEventActor { get; set; }
+        public IReadOnlyList<RdapEvent> AsEventActor { get; set; }
 
         /// <summary>
         /// an array of IP network objects
         /// </summary>
         [JsonPropertyName("networks")]
-        public IReadOnlyCollection<RdapIPNetwork> Networks { get; set; }
+        public IReadOnlyList<RdapIPNetwork> Networks { get; set; }
 
         /// <summary>
         /// an array of autnum network objects
         /// </summary>
         [JsonPropertyName("autnums")]
-        public IReadOnlyCollection<RdapAutnum> Autnums { get; set; }
+        public IReadOnlyList<RdapAutnum> Autnums { get; set; }
     }
 }

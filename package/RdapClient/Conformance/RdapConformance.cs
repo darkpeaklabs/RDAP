@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace DarkPeakLabs.Rdap.Conformance
 {
@@ -11,11 +12,6 @@ namespace DarkPeakLabs.Rdap.Conformance
     /// </summary>
     public class RdapConformance
     {
-        /// <summary>
-        /// Class logger
-        /// </summary>
-        private ILogger _logger;
-
         private List<RdapConformanceViolation> violations;
 
         /// <summary>
@@ -31,10 +27,9 @@ namespace DarkPeakLabs.Rdap.Conformance
         /// <summary>
         /// Creates a new RDAP conformance instance
         /// </summary>
-        internal RdapConformance(ILogger logger = null)
+        internal RdapConformance()
         {
-            _logger = logger;
-            violations = new List<RdapConformanceViolation>();
+            violations = [];
         }
 
         /// <summary>
@@ -43,18 +38,8 @@ namespace DarkPeakLabs.Rdap.Conformance
         /// <param name="severity">Violation severity</param>
         /// <param name="category">Violation category</param>
         /// <param name="message">Violation message</param>
-        public void AddViolation(RdapConformanceViolationSeverity severity, RdapConformanceViolationCategory category, string message)
+        internal void AddViolation(RdapConformanceViolationSeverity severity, RdapConformanceViolationCategory category, string message)
         {
-            switch (severity)
-            {
-                case RdapConformanceViolationSeverity.Error:
-                    _logger?.LogError("Conformance violation. Category = {Category}, Message = {Message}", category, message); break;
-                case RdapConformanceViolationSeverity.Information:
-                    _logger?.LogInformation("Conformance violation. Category = {Category}, Message = {Message}", category, message); break;
-                case RdapConformanceViolationSeverity.Warning:
-                    _logger?.LogWarning("Conformance violation. Category = {Category}, Message = {Message}", category, message); break;
-            }
-
             violations.Add(new RdapConformanceViolation()
             {
                 Severity = severity,
@@ -110,10 +95,5 @@ namespace DarkPeakLabs.Rdap.Conformance
         /// <param name="format">Message format string</param>
         /// <param name="args">Message arguments</param>
         internal void AddImplementationViolation(RdapConformanceViolationSeverity severity, string format, params object[] args) => AddImplementationViolation(severity, string.Format(CultureInfo.InvariantCulture, format, args));
-
-        public void AddViolations(IReadOnlyList<RdapConformanceViolation> violations)
-        {
-            this.violations.AddRange(violations);
-        }
     }
 }

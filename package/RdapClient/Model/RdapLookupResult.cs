@@ -17,10 +17,10 @@ namespace DarkPeakLabs.Rdap
 
         public T Value { get; internal set; }
 
-        public DateTime? RequestSent { get; internal set; }
-        public DateTime? ResponseReceived { get; internal set; }
-        public DateTime? RequestFailed { get; internal set; }
-        public DateTime? DataReadStarted { get; internal set; }
-        public DateTime? DataReadFinished { get; internal set; }
+        public DateTimeOffset? RequestSent { get; internal set; }
+        public DateTimeOffset? ResponseReceived { get; internal set; }
+        public DateTimeOffset? RequestFailed { get; internal set; }
+        public DateTimeOffset? DataReadStarted { get; internal set; }
+        public DateTimeOffset? DataReadFinished { get; internal set; }
     }
 }

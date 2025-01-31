@@ -1,4 +1,4 @@
-﻿using DarkPeakLabs.Rdap.Values.Json;
+﻿using DarkPeakLabs.Rdap.Values;
 using Microsoft.Extensions.Logging;
 
 namespace DarkPeakLabs.Rdap.Serialization
@@ -9,7 +9,7 @@ namespace DarkPeakLabs.Rdap.Serialization
         /// Maps unregistered role value seen in the field to IANA RDAP JSON values.
         /// <see cref="https://tools.ietf.org/html/draft-blanchet-regext-rdap-deployfindings-05">Draft: RDAP Deployment Findings and Update</see>
         /// </summary>
-        public static bool TryMapToRdap(string value, out RdapEntityRole result, ILogger logger = null)
+        public static bool TryMapToRdap(string value, out RdapEntityRole result)
         {
             switch (value)
             {
@@ -21,15 +21,6 @@ namespace DarkPeakLabs.Rdap.Serialization
                     result = RdapEntityRole.Unknown;
                     break;
             };
-
-            if (result != RdapEntityRole.Unknown)
-            {
-                logger?.LogDebug("Entity role string value {Value} mapped to value {Enum}", value, result);
-            }
-            else
-            {
-                logger?.LogWarning("Unable to map Entity role string value {Value} to RDAP JSON value", value);
-            }
 
             return result != RdapEntityRole.Unknown;
         }

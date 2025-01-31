@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -122,7 +123,7 @@ namespace DarkPeakLabs.Rdap.Utilities
 
         protected virtual async Task<IReadOnlyCollection<string>> ReadDomainsAsync(Stream stream, string delimiter, bool hasHeaderRecord)
         {
-            HashSet<string> list = [];
+            HashSet<string> domainSet = [];
 
             using StreamReader reader = new StreamReader(stream);
             using var csv = new CsvReader(
@@ -136,10 +137,10 @@ namespace DarkPeakLabs.Rdap.Utilities
 
             await foreach (var record in csv.GetRecordsAsync<T>())
             {
-                list.Add(record.Domain);
+                domainSet.Add(record.Domain);
             }
 
-            return list;
+            return domainSet;
         }
 
         private static async Task<DomainListMetadata> ReadDomainListMetadataAsync(string path)

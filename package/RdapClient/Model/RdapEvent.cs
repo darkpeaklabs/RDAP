@@ -1,4 +1,4 @@
-﻿using DarkPeakLabs.Rdap.Values.Json;
+﻿using DarkPeakLabs.Rdap.Values;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -28,12 +28,12 @@ namespace DarkPeakLabs.Rdap
         /// </summary>
         [DisplayFormat(DataFormatString = "o")]
         [JsonPropertyName("eventDate")]
-        public DateTime EventDate { get; set; }
+        public DateTimeOffset EventDate { get; set; }
 
         /// <summary>
         /// Array of links
         /// </summary>
         [JsonPropertyName("links")]
-        public IReadOnlyCollection<RdapLink> Links { get; set; }
+        public IReadOnlyList<RdapLink> Links { get; set; }
     }
 }

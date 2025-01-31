@@ -30,12 +30,12 @@ namespace DarkPeakLabs.Rdap
         /// an array of objects representing DNS DS records
         /// </summary>
         [JsonPropertyName("dsData")]
-        public IReadOnlyCollection<RdapDnsDsRecord> DnsDsRecords { get; set; }
+        public IReadOnlyList<RdapDnsDsRecord> DnsDsRecords { get; set; }
 
         /// <summary>
         /// an array of objects representing DNSKEY records
         /// </summary>
         [JsonPropertyName("keyData")]
-        public IReadOnlyCollection<RdapDnsKeyRecord> DnsKeyRecords { get; set; }
+        public IReadOnlyList<RdapDnsKeyRecord> DnsKeyRecords { get; set; }
     }
 }

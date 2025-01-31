@@ -1,224 +1,132 @@
-﻿using DarkPeakLabs.Rdap.Conformance;
-using DarkPeakLabs.Rdap.Values.Json;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Text.Json;
-using System.Text.Json.Serialization;
+using System.Text.Json.Nodes;
+using DarkPeakLabs.Rdap.Values;
 
 namespace DarkPeakLabs.Rdap.Serialization
 {
-    /// <summary>
-    /// Json converter for RDAP enum types
-    /// </summary>
-    /// <typeparam name="TEnum"></typeparam>
-    internal class RdapEnumConverter<TEnum> : JsonConverter<TEnum> where TEnum : struct
+    internal static class RdapEnumConverter
     {
-        /// <summary>
-        /// RDAP conformance
-        /// </summary>
-        private readonly RdapConformance conformance;
-
-        /// <summary>
-        /// Class logger
-        /// </summary>
-        private ILogger _logger;
-
-        /// <summary>
-        /// constructor
-        /// </summary>
-        /// <param name="options"></param>
-        public RdapEnumConverter(JsonSerializerOptions options, RdapConformance conformance, ILogger logger = null)
+        public static bool TryGetValue(JsonValue jsonValue, Type enumType, RdapSerializerContext context, out object enumValue)
         {
-            _ = options ?? throw new ArgumentNullException(paramName: nameof(options));
+            JsonValueKind valueKind = jsonValue.GetValueKind();
 
-            this.conformance = conformance;
-            _logger = logger;
-        }
-
-        /// <summary>
-        /// Function converts string token to Enum
-        /// </summary>
-        /// <param name="reader"></param>
-        /// <param name="typeToConvert"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        public override TEnum Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            // decide how to parse base on token type
-            switch (reader.TokenType)
+            switch (valueKind)
             {
-                case JsonTokenType.String:
-                    return ParseString(reader.GetString(), typeToConvert, ref reader);
+                case JsonValueKind.String:
+                    enumValue = ParseString(jsonValue, enumType, context);
+                    return true;
 
-                case JsonTokenType.Number:
-                    var undelayingType = typeToConvert.GetEnumUnderlyingType();
-                    // read token value according to TEnum underlying numeric type
-                    if (undelayingType == typeof(int))
+                case JsonValueKind.Number:
+                    if (jsonValue.TryGetValue(out int value))
                     {
-                        if (reader.TryGetInt32(out int value))
-                        {
-                            return ParseNumber(value, typeToConvert);
-                        }
-                        conformance.AddJsonViolation(RdapConformanceViolationSeverity.Error, ref reader, $"Value cannot be read as 32-bit integer for type {typeToConvert.Name}");
-                        if (RdapSerializer.ThrowOnError)
-                        {
-                            throw new RdapJsonException($"Value cannot be read as 32-bit integer for type {typeToConvert.Name}", ref reader);
-                        }
-                        else
-                        {
-                            return GetUnknown(typeToConvert);
-                        }
+                        enumValue = ParseNumber(value, enumType, context);
+                        return true;
                     }
-                    else if (undelayingType == typeof(byte))
-                    {
-                        if (reader.TryGetByte(out byte value))
-                        {
-                            return ParseNumber(value, typeToConvert);
-                        }
-                        conformance.AddJsonViolation(RdapConformanceViolationSeverity.Error, ref reader, $"Value cannot be read as byte for type {typeToConvert.Name}");
-                        if (RdapSerializer.ThrowOnError)
-                        {
-                            throw new RdapJsonException($"Value cannot be read as byte for type {typeToConvert.Name}", ref reader);
-                        }
-                        else
-                        {
-                            return GetUnknown(typeToConvert);
-                        }
-                    }
-                    throw new RdapJsonException($"Enum {typeToConvert.Name} has unsupported enum underlaying type {undelayingType.Name}", ref reader);
-
-                default:
-                    conformance.AddJsonViolation(RdapConformanceViolationSeverity.Error, ref reader, $"Unexpected token type {reader.TokenType} parsing response JSON for type {typeToConvert.Name}");
+                    context.AddJsonViolationError(jsonValue, $"Value cannot be read as 32-bit integer for type {enumType.Name}");
                     if (RdapSerializer.ThrowOnError)
                     {
-                        throw new RdapJsonException($"Unexpected token type {reader.TokenType} parsing response JSON for type {typeToConvert.Name}", ref reader);
+                        throw new RdapJsonException($"Value cannot be read as 32-bit integer for type {enumType.Name}");
                     }
                     else
                     {
-                        return GetUnknown(typeToConvert);
+                        enumValue = GetUnknown(enumType);
+                        return true;
                     }
+
+                default:
+                    context.AddJsonViolationError(jsonValue, $"Unexpected token type {valueKind} parsing response JSON for type {enumType.Name}");
+                    enumValue = GetUnknown(enumType);
+                    return true;
             }
         }
 
-        public override void Write(Utf8JsonWriter writer, TEnum value, JsonSerializerOptions options)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Attempts to get well-known enum value Unknown for TEnum
-        /// The Unknown value is used to indicate the string value cannot be converted to TEnum
-        /// </summary>
-        /// <param name="typeToConvert"></param>
-        /// <returns></returns>
-        private static TEnum GetUnknown(Type typeToConvert)
+        private static object GetUnknown(Type enumType)
         {
             // try parse "Unknown" and return it to indicate the string value was not recognized
-            if (Enum.TryParse<TEnum>("Unknown", true, out TEnum result))
+            if (Enum.TryParse(enumType, "Unknown", ignoreCase: true, out object result))
             {
                 return result;
             }
 
             // if enum does not contain "Unknown", throw an exception
-            throw new RdapJsonException($"Enum type {typeToConvert.Name} does not have \"Unknown\" value");
+            throw new RdapJsonException($"Enum type {enumType.Name} does not have \"Unknown\" value");
         }
 
         /// <summary>
         /// Converts JSON string token value to TEnum
         /// </summary>
         /// <param name="value"></param>
-        /// <param name="typeToConvert"></param>
+        /// <param name="enumType"></param>
         /// <returns></returns>
-        private TEnum ParseString(string value, Type typeToConvert, ref Utf8JsonReader reader)
+        private static object ParseString(JsonValue jsonValue, Type enumType, RdapSerializerContext context)
         {
-            TEnum result;
-            string conformanceError = $"Value \"{value}\" is not in IANA RDAP JSON Values registry. Type: {typeToConvert.Name}.";
+            string value = jsonValue.GetValue<string>();
+            string conformanceError = $"Value \"{value}\" is not in IANA RDAP JSON Values registry. Type: {enumType.Name}.";
 
             // Try parse string value and return enum
-            if (RdapEnumHelper.TryParseString(value, out result, _logger))
+            if (RdapEnumHelper.TryParseString(value, enumType, out var result))
             {
                 return result;
             }
 
             // try to map known unregistered values to RDAP values
-            if (typeToConvert == typeof(RdapStatus))
+            if (enumType == typeof(RdapStatus))
             {
-                if (RdapStatusMapping.TryMapToRdap(value, out RdapStatus status, _logger))
+                if (RdapStatusMapping.TryMapToRdap(value, out RdapStatus status))
                 {
-                    conformance.AddJsonViolation(RdapConformanceViolationSeverity.Error, ref reader, $"{conformanceError} Using value according to [RFC 8056].");
-                    return (TEnum)(object)status;
+                    context.AddJsonViolationError(jsonValue, $"{conformanceError} Using value according to [RFC 8056].");
+                    return status;
                 }
             }
-            else if (typeToConvert == typeof(RdapNoticeAndRemarkType))
+            else if (enumType == typeof(RdapNoticeAndRemarkType))
             {
-                if (RdapRemarkTypeMapping.TryMapToRdap(value, out RdapNoticeAndRemarkType remarkType, _logger))
+                if (RdapRemarkTypeMapping.TryMapToRdap(value, out RdapNoticeAndRemarkType remarkType))
                 {
-                    conformance.AddJsonViolation(RdapConformanceViolationSeverity.Error, ref reader, $"{conformanceError} Using value {remarkType} according to [draft-blanchet-regext-rdap-deployfindings].");
-                    return (TEnum)(object)remarkType;
+                    context.AddJsonViolationError(jsonValue, $"{conformanceError} Using value {remarkType} according to [draft-blanchet-regext-rdap-deployfindings].");
+                    return remarkType;
                 }
             }
-            else if (typeToConvert == typeof(RdapEventAction))
+            else if (enumType == typeof(RdapEventAction))
             {
-                if (RdapEventActionMapping.TryMapToRdap(value, out RdapEventAction eventAction, _logger))
+                if (RdapEventActionMapping.TryMapToRdap(value, out RdapEventAction eventAction))
                 {
-                    conformance.AddJsonViolation(RdapConformanceViolationSeverity.Error, ref reader, $"{conformanceError} Using value {eventAction} according to [draft-blanchet-regext-rdap-deployfindings].");
-                    return (TEnum)(object)eventAction;
+                    context.AddJsonViolationError(jsonValue, $"{conformanceError} Using value {eventAction} according to [draft-blanchet-regext-rdap-deployfindings].");
+                    return eventAction;
                 }
             }
-            else if (typeToConvert == typeof(RdapEntityRole))
+            else if (enumType == typeof(RdapEntityRole))
             {
-                if (RdapRoleMapping.TryMapToRdap(value, out RdapEntityRole role, _logger))
+                if (RdapRoleMapping.TryMapToRdap(value, out RdapEntityRole role))
                 {
-                    conformance.AddJsonViolation(RdapConformanceViolationSeverity.Error, ref reader, $"{conformanceError} Using value {role} according to [draft-blanchet-regext-rdap-deployfindings].");
-                    return (TEnum)(object)role;
+                    context.AddJsonViolationError(jsonValue, $"{conformanceError} Using value {role} according to [draft-blanchet-regext-rdap-deployfindings].");
+                    return role;
                 }
             }
 
-            conformance.AddJsonViolation(RdapConformanceViolationSeverity.Error, ref reader, $"{conformanceError}");
+            context.AddJsonViolationError(jsonValue, $"{conformanceError}");
 
-            return GetUnknown(typeToConvert);
+            return GetUnknown(enumType);
         }
 
-        /// <summary>
-        /// Tries converting object to TEnum
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="result"></param>
-        /// <returns></returns>
-        private static bool TryConvertTo(object value, out TEnum? result)
+        private static object ParseNumber(int value, Type enumType, RdapSerializerContext context)
         {
-            try
+            foreach (var enumValue in Enum.GetValues(enumType))
             {
-                result = (TEnum)value;
-                return true;
+                if ((int)enumValue == value)
+                {
+                    return enumValue;
+                }
             }
-            catch (InvalidCastException)
-            {
-                result = null;
-                return false;
-            }
-        }
 
-        /// <summary>
-        /// Converts number to TEnum
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="typeToConvert"></param>
-        /// <returns></returns>
-        private TEnum ParseNumber(object value, Type typeToConvert)
-        {
-            if (TryConvertTo(value, out TEnum? result))
-            {
-                return result.Value;
-            }
-            _logger?.LogCritical("Value {Value} is not defined for type {Type}.", value, typeToConvert.Name);
+            context.LogCritical("Value {Value} is not defined for type {Type}.", value, enumType.Name);
             if (RdapSerializer.ThrowOnError)
             {
-                throw new RdapJsonException($"Value {value} is not defined for type {typeToConvert.Name}.");
+                throw new RdapJsonException($"Value {value} is not defined for type {enumType.Name}.");
             }
             else
             {
-                return GetUnknown(typeToConvert);
+                return GetUnknown(enumType);
             }
         }
     }

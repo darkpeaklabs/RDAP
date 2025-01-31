@@ -12,7 +12,7 @@ namespace DarkPeakLabs.Rdap
         /// List of search results
         /// </summary>
         [JsonPropertyName("domainSearchResults")]
-        public IReadOnlyCollection<RdapDomain> Results { get; set; }
+        public IReadOnlyList<RdapDomain> Results { get; set; }
 
         // IRdapResponse interface
 
@@ -20,13 +20,13 @@ namespace DarkPeakLabs.Rdap
         /// an array of strings, each providing a hint as to the specifications used in the construction of the response
         /// </summary>
         [JsonPropertyName("rdapConformance")]
-        public IReadOnlyCollection<string> Conformance { get; set; }
+        public IReadOnlyList<string> Conformance { get; set; }
 
         /// <summary>
         /// List of notices
         /// </summary>
         [JsonPropertyName("notices")]
-        public IReadOnlyCollection<RdapNotice> Notices { get; set; }
+        public IReadOnlyList<RdapNotice> Notices { get; set; }
 
         /// <summary>
         /// Language

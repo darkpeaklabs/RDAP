@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DarkPeakLabs.Rdap.Values.DnsSec
+namespace DarkPeakLabs.Rdap.Values
 {
     /// <summary>
     ///   Type of DNSSEC digest
     /// </summary>
-    public enum DigestType
+    public enum DnsSecDigestType
     {
         Unknown = -1,
         None = 0,

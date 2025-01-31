@@ -18,7 +18,7 @@ public class RdapServiceRegistryBase
     /// the latest update date of the registry by IANA in the Internet date/time format[RFC3339]
     /// </summary>
     [JsonPropertyName("publication")]
-    public DateTime Publication { get; set; }
+    public DateTimeOffset Publication { get; set; }
 
     /// <summary>
     /// Contain a comment regarding the content of the bootstrap object.

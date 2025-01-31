@@ -12,13 +12,13 @@ namespace DarkPeakLabs.Rdap
         /// an array of strings, each providing a hint as to the specifications used in the construction of the response
         /// </summary>
         [JsonPropertyName("rdapConformance")]
-        IReadOnlyCollection<string> Conformance { get; set; }
+        IReadOnlyList<string> Conformance { get; set; }
 
         /// <summary>
         /// List of notices
         /// </summary>
         [JsonPropertyName("notices")]
-        IReadOnlyCollection<RdapNotice> Notices { get; set; }
+        IReadOnlyList<RdapNotice> Notices { get; set; }
 
         /// <summary>
         /// Language

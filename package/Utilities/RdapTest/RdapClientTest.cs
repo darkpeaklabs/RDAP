@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Net;
 using DarkPeakLabs.PublicSuffix;
 using DarkPeakLabs.Rdap.Bootstrap;
-using DarkPeakLabs.Rdap.Values.Json;
+using DarkPeakLabs.Rdap.Values;
 
 namespace DarkPeakLabs.Rdap.Utilities;
 

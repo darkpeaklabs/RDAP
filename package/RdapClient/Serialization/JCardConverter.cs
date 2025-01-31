@@ -1,12 +1,11 @@
-using DarkPeakLabs.Rdap.Conformance;
-using DarkPeakLabs.Rdap.Values.Json;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using DarkPeakLabs.Rdap.Conformance;
+using DarkPeakLabs.Rdap.Values;
+using Microsoft.Extensions.Logging;
 
 namespace DarkPeakLabs.Rdap.Serialization
 {
@@ -270,7 +269,7 @@ namespace DarkPeakLabs.Rdap.Serialization
             else
             {
                 // try parsing value
-                if (RdapEnumHelper.TryParseString<RdapContactKind>(value, out RdapContactKind kind, _logger))
+                if (RdapEnumHelper.TryParseString<RdapContactKind>(value, out RdapContactKind kind))
                 {
                     return kind;
                 }
@@ -302,7 +301,7 @@ namespace DarkPeakLabs.Rdap.Serialization
                 phoneNumberTypes = [];
                 foreach (string type in types)
                 {
-                    if (RdapEnumHelper.TryParseString(type, out RdapPhoneNumberType result, _logger))
+                    if (RdapEnumHelper.TryParseString(type, out RdapPhoneNumberType result))
                     {
                         phoneNumberTypes.Add(result);
                     }
@@ -604,7 +603,7 @@ namespace DarkPeakLabs.Rdap.Serialization
             //create empty contact object
             RdapContact contact = new RdapContact()
             {
-                Kind = Values.Json.RdapContactKind.Unknown
+                Kind = RdapContactKind.Unknown
             };
 
             // capture depth at the start of properties array
@@ -652,7 +651,7 @@ namespace DarkPeakLabs.Rdap.Serialization
                     // read property parameters
                     if (!TryReadPropertyParameters(ref reader, out Dictionary<string, List<string>> propertyParameters))
                     {
-                        _logger?.LogWarning("Unable to read property prameters - skipping property.");
+                        _logger?.LogWarning("Unable to read property parameters - skipping property.");
                         // skip property
                         ReadUntil(ref reader, JsonTokenType.EndArray, propertyStartDepth);
                         ReadToken(ref reader);

@@ -48,7 +48,7 @@ public class CsvHttpClient : HttpClient
     /// <typeparam name="T">Record data type</typeparam>
     /// <param name="requestUri">Request Url</param>
     /// <returns></returns>
-    public async Task<IReadOnlyCollection<T>> GetRecordsAsync<T>(Uri requestUri)
+    public async Task<IReadOnlyList<T>> GetRecordsAsync<T>(Uri requestUri)
     {
         using StreamReader reader = new StreamReader(await GetStreamAsync(requestUri).ConfigureAwait(false));
         using CsvReader csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
@@ -61,7 +61,7 @@ public class CsvHttpClient : HttpClient
     /// <typeparam name="T">Record data type</typeparam>
     /// <param name="requestUri">Request Url</param>
     /// <returns></returns>
-    public IReadOnlyCollection<T> GetRecords<T>(Uri requestUri)
+    public IReadOnlyList<T> GetRecords<T>(Uri requestUri)
     {
         return GetRecordsAsync<T>(requestUri).GetAwaiter().GetResult();
     }

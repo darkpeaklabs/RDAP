@@ -1,97 +1,57 @@
-﻿using DarkPeakLabs.Rdap.Conformance;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Text.Json;
-using System.Text.Json.Serialization;
+using System.Text.Json.Nodes;
+using DarkPeakLabs.Rdap.Conformance;
+using Microsoft.Extensions.Logging;
 
 namespace DarkPeakLabs.Rdap.Serialization
 {
     /// <summary>
-    /// Json converter for object handle
+    /// Json value converter for date and time
     /// </summary>
-    internal class RdapDateTimeConverter : JsonConverter<DateTime>
+    internal static class RdapDateTimeConverter
     {
-        private static readonly string[] formats = new string[] {
+        private static readonly string[] formats = [
             "yyyy-MM-ddTHH:mm:ss.FFF",
             "yyyy-MM-ddTHH:mm:ss.FFFZ",
             "yyyy-MM-ddTHH:mm:ss.FFFz",
             "yyyy-MM-ddTHH:mm:ss.FFFzz",
             "yyyy-MM-ddTHH:mm:ss.FFFzzz",
             "yyyy-MM-ddTHH:mm:ss.FFFzzzz"
-        };
+        ];
 
-        /// <summary>
-        /// Class logger
-        /// </summary>
-        private ILogger _logger;
-
-        /// <summary>
-        /// RDAP conformance
-        /// </summary>
-        private readonly RdapConformance conformance;
-
-        /// <summary>
-        /// constructor
-        /// </summary>
-        /// <param name="errors"></param>
-        public RdapDateTimeConverter(RdapConformance conformance, ILogger logger = null)
+        public static bool TryGetValue(JsonValue jsonValue, RdapSerializerContext context, out DateTimeOffset dateTime)
         {
-            _logger = logger;
-            this.conformance = conformance;
-        }
-
-        /// <summary>
-        /// Reads and parses object handle value
-        /// </summary>
-        /// <param name="reader"></param>
-        /// <param name="typeToConvert"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            string value = reader.GetString();
-            _logger?.LogDebug("Parsing string value {Value} to DateTime", value);
-
-            DateTime dt;
-
-            if (DateTime.TryParse(value, out dt))
+            dateTime = default;
+            var valueKind = jsonValue.GetValueKind();
+            switch (valueKind)
             {
-                return dt;
+                case JsonValueKind.String:
+                    break;
+                default:
+                    context.AddJsonViolationError(jsonValue, $"{valueKind} is not a valid JSON token type for date and time property value {jsonValue.GetPropertyName()}");
+                    return false;
+            }
+
+            string value = jsonValue.GetValue<string>();
+
+            if (DateTimeOffset.TryParse(value, out dateTime))
+            {
+                return true;
             }
 
             foreach (string format in formats)
             {
-                if (DateTime.TryParseExact(value, format, null, DateTimeStyles.None, out dt))
+                if (DateTimeOffset.TryParseExact(value, format, null, DateTimeStyles.None, out dateTime))
                 {
-                    conformance.AddJsonViolation(RdapConformanceViolationSeverity.Error, ref reader, $"Invalid date and time value {value}. Using alternative format \"{format}\".");
-                    return dt;
+                    context.AddJsonViolationError(jsonValue, $"{value} is not in a valid format for date and time value. Using alternative format \"{format}\".");
+                    return true;
                 }
             }
 
-            conformance.AddJsonViolation(RdapConformanceViolationSeverity.Error, ref reader, $"Invalid date and time value {value}");
-
-            if (RdapSerializer.ThrowOnError)
-            {
-                _logger?.LogCritical("Unable to parse string value {Value} to DateTime", value);
-                throw new RdapJsonException($"Unable to parse string value \"{value}\" to DateTime", ref reader);
-            }
-            else
-            {
-                _logger?.LogWarning("Unable to parse string value {Value} to DateTime. Using DateTime.MinValue", value);
-                return DateTime.MinValue;
-            }
-        }
-
-        /// <summary>
-        /// Not implemented
-        /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="value"></param>
-        /// <param name="options"></param>
-        public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
-        {
-            throw new NotImplementedException();
+            context.AddJsonViolationError(jsonValue, $"{value} is not a valid date and time value");
+            return false;
         }
     }
 }

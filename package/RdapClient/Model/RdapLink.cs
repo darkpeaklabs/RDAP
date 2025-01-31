@@ -1,4 +1,4 @@
-﻿using DarkPeakLabs.Rdap.Values.Json;
+﻿using DarkPeakLabs.Rdap.Values;
 using System.Text.Json.Serialization;
 
 namespace DarkPeakLabs.Rdap
