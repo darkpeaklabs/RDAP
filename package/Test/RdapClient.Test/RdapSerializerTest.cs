@@ -103,8 +103,8 @@ namespace DarkPeakLabs.Rdap.Test
             var dnsDsRecords = response.SecureDNS.DnsDsRecords.FirstOrDefault();
             Assert.IsNotNull(dnsDsRecords);
             Assert.AreEqual(dnsDsRecords.KeyTag, 370);
-            Assert.AreEqual(dnsDsRecords.Algorithm, DnsSecAlgorithmType.EcDsaP256Sha256);
-            Assert.AreEqual(dnsDsRecords.DigestType, DnsSecDigestType.Sha256);
+            Assert.AreEqual(dnsDsRecords.Algorithm, DnsSecAlgorithmType.ECDSACurveP256WithSHA256);
+            Assert.AreEqual(dnsDsRecords.DigestType, DnsSecDigestType.SHA256);
             Assert.AreEqual(dnsDsRecords.Digest, "BE74359954660069D5C63D200C39F5603827D7DD02B56F120EE9F3A86764247C");
 
             Assert.IsNotNull(response.NameServers);

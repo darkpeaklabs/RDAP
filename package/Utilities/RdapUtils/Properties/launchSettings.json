@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "RdapUtils": {
+      "commandName": "Project",
+      "commandLineArgs": "gen-code --path C:\\Code\\Repos\\RDAP"
+    }
+  }
+}

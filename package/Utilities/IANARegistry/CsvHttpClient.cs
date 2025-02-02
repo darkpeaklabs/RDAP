@@ -1,4 +1,5 @@
 ﻿using CsvHelper;
+using CsvHelper.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -51,7 +52,14 @@ public class CsvHttpClient : HttpClient
     public async Task<IReadOnlyList<T>> GetRecordsAsync<T>(Uri requestUri)
     {
         using StreamReader reader = new StreamReader(await GetStreamAsync(requestUri).ConfigureAwait(false));
-        using CsvReader csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
+        var csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            Delimiter = ",",
+            HasHeaderRecord = true,
+            TrimOptions = TrimOptions.Trim,
+            MissingFieldFound = null
+        };
+        using CsvReader csvReader = new CsvReader(reader, csvConfiguration);
         return csvReader.GetRecords<T>().ToList();
     }
 

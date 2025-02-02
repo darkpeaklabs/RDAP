@@ -13,7 +13,7 @@ namespace DarkPeakLabs.Rdap.Utilities;
 public static class RdapEnumCodeGenerator
 {
     private static readonly Regex regexDescription = new("[\\r\\t\\n\\s]+");
-    private static readonly Regex regexValue = new("[ -._]?");
+    private static readonly Regex regexValue = new("[ -._/]?");
     private static readonly TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
 
     private static IEnumerable<RdapJsonValue> jsonValues;
@@ -62,18 +62,64 @@ public static class RdapEnumCodeGenerator
         writer.Write(code);
     }
 
-    public static async Task<string> GenerateDnsSecurityAlgorithmNumbersAsync()
+    public static async Task<string> GenerateDnsSecAlgorithmNumbersAsync()
     {
         using IANARegistryClient client = new IANARegistryClient();
-        var numbers = await client.GetDnsSecurityAlgorithmNumbersAsync().ConfigureAwait(false);
+        var numbers = await client.GetDnsSecAlgorithmNumbersAsync().ConfigureAwait(false);
 
-        var type = typeof(DnsSecAlgorithmType);
+        return GenerateDnsSecEnum<DnsSecAlgorithmType>(
+            numbers.Select(x => new DnsSecEnumValue()
+            {
+                Value = x.Value,
+                Description = x.Description
+            }).ToList());
+    }
+
+    public static async Task<string> GenerateDnsSecDigestTypesAsync()
+    {
+        using IANARegistryClient client = new IANARegistryClient();
+        var numbers = await client.GetDnsSecDigestTypesAsync().ConfigureAwait(false);
+
+        return GenerateDnsSecEnum<DnsSecDigestType>(
+            numbers.Select(x => new DnsSecEnumValue()
+            {
+                Value = x.Value,
+                Description = x.Description
+            }).ToList());
+    }
+
+    private static string GenerateDnsSecEnum<T>(List<DnsSecEnumValue> enumValues)
+    {
+        var type = typeof(T);
         StringBuilder sourceCode = new StringBuilder();
         sourceCode.AppendHeader(type);
 
-        foreach (var number in numbers)
+        foreach (var enumValue in enumValues)
         {
-            sourceCode.AppendValue(number.Value, number.Description);
+            if (enumValue.Description.Equals("reserved", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            if (!int.TryParse(enumValue.Value, out var value))
+            {
+                continue;
+            }
+
+            var bracketIndex = enumValue.Description.IndexOf('(', StringComparison.Ordinal);
+            var name = bracketIndex == -1 ? enumValue.Description : enumValue.Description[..bracketIndex];
+            bool isReserved = name.StartsWith("reserved", StringComparison.OrdinalIgnoreCase);
+            if (isReserved)
+            {
+                sourceCode.AppendLine("#pragma warning disable CA1700");
+            }
+            
+            sourceCode.AppendValue(name, enumValue.Description, value);
+
+            if (isReserved)
+            {
+                sourceCode.AppendLine("#pragma warning restore CA1700");
+            }
         }
 
         sourceCode.AppendFooter();
@@ -145,7 +191,7 @@ public static class RdapEnumCodeGenerator
         stringBuilder.AppendLine("}");
     }
 
-    private static void AppendValue(this StringBuilder stringBuilder, string name, string description)
+    private static void AppendValue(this StringBuilder stringBuilder, string name, string description, int? value = null)
     {
         stringBuilder.AppendLine();
         stringBuilder.AppendLine("\t\t/// <summary>");
@@ -154,16 +200,20 @@ public static class RdapEnumCodeGenerator
         stringBuilder.AppendLine(CultureInfo.InvariantCulture, $"\t\t[Display(Name = \"{FormatName(name)}\", Description = \"{FormatDescription(description)}\")]");
 
         string formattedValue = FormatValue(name);
+        string valueLine = value.HasValue ?
+            $"\t\t{formattedValue} = {value}," :
+            $"\t\t{formattedValue},";
+
         if (formattedValue.Equals("reserved", StringComparison.OrdinalIgnoreCase))
         {
             stringBuilder.AppendLine("#pragma warning disable CA1700 // Do not name enum values 'Reserved'");
-            stringBuilder.AppendLine(CultureInfo.InvariantCulture, $"\t\t{FormatValue(name)},");
+            stringBuilder.AppendLine(valueLine);
             stringBuilder.AppendLine("#pragma warning restore CA1700 // Do not name enum values 'Reserved'");
 
         }
         else 
         {
-            stringBuilder.AppendLine(CultureInfo.InvariantCulture, $"\t\t{FormatValue(name)},");
+            stringBuilder.AppendLine(valueLine);
         }
     }
 }
