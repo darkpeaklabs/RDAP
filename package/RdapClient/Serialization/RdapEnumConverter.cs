@@ -24,21 +24,40 @@ namespace DarkPeakLabs.Rdap.Serialization
                         return true;
                     }
                     context.AddJsonViolationError(jsonValue, $"Value cannot be read as 32-bit integer for type {enumType.Name}");
-                    if (RdapSerializer.ThrowOnError)
-                    {
-                        throw new RdapJsonException($"Value cannot be read as 32-bit integer for type {enumType.Name}");
-                    }
-                    else
-                    {
-                        enumValue = GetUnknown(enumType);
-                        return true;
-                    }
+                    enumValue = GetUnknown(enumType);
+                    return true;
 
                 default:
                     context.AddJsonViolationError(jsonValue, $"Unexpected token type {valueKind} parsing response JSON for type {enumType.Name}");
                     enumValue = GetUnknown(enumType);
                     return true;
             }
+        }
+
+        internal static bool TryParseString<T>(string value, out T result) where T : struct
+        {
+            return Enum.TryParse(
+                NormalizeStringValue(value),
+                true,
+                out result);
+        }
+
+        internal static bool TryParseString(string value, Type enumType, out object result)
+        {
+            return Enum.TryParse(
+                enumType,
+                NormalizeStringValue(value),
+                ignoreCase: true,
+                out result);
+        }
+
+        private static string NormalizeStringValue(string value)
+        {
+            return value
+                .Replace(" ", "", StringComparison.Ordinal)
+                .Replace("-", "", StringComparison.Ordinal)
+                .Replace(".", "", StringComparison.Ordinal)
+                .Replace("_", "", StringComparison.Ordinal);
         }
 
         private static object GetUnknown(Type enumType)
@@ -49,8 +68,13 @@ namespace DarkPeakLabs.Rdap.Serialization
                 return result;
             }
 
+            if (RdapSerializer.HandleUndefinedEnumValue)
+            {
+                return Enum.GetValues(enumType);
+            }
+
             // if enum does not contain "Unknown", throw an exception
-            throw new RdapJsonException($"Enum type {enumType.Name} does not have \"Unknown\" value");
+            throw new RdapSerializerException($"Enum type {enumType.Name} does not have \"Unknown\" value");
         }
 
         /// <summary>
@@ -65,7 +89,7 @@ namespace DarkPeakLabs.Rdap.Serialization
             string conformanceError = $"Value \"{value}\" is not in IANA RDAP JSON Values registry. Type: {enumType.Name}.";
 
             // Try parse string value and return enum
-            if (RdapEnumHelper.TryParseString(value, enumType, out var result))
+            if (TryParseString(value, enumType, out var result))
             {
                 return result;
             }
@@ -120,13 +144,13 @@ namespace DarkPeakLabs.Rdap.Serialization
             }
 
             context.LogCritical("Value {Value} is not defined for type {Type}.", value, enumType.Name);
-            if (RdapSerializer.ThrowOnError)
+            if (RdapSerializer.HandleUndefinedEnumValue)
             {
-                throw new RdapJsonException($"Value {value} is not defined for type {enumType.Name}.");
+                return GetUnknown(enumType);
             }
             else
             {
-                return GetUnknown(enumType);
+                throw new RdapSerializerException($"Value {value} is not defined for type {enumType.Name}.");
             }
         }
     }

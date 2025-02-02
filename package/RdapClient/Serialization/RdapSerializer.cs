@@ -13,9 +13,9 @@ namespace DarkPeakLabs.Rdap.Serialization
     /// </summary>
     internal class RdapSerializer
     {
-        internal static bool ThrowOnError;
+        private static readonly JsonSerializerOptions _deserializeOptions = new();
 
-        private static readonly JsonSerializerOptions _deserializeOptions = new JsonSerializerOptions();
+        public static bool HandleUndefinedEnumValue { get; set; }
 
         /// <summary>
         /// Function deserializes Json to RDAP response object
@@ -30,19 +30,8 @@ namespace DarkPeakLabs.Rdap.Serialization
                 conformance ?? new RdapConformance(),
                 logger);
             
-            try
-            {
-                var node = JsonSerializer.Deserialize<JsonNode>(json, _deserializeOptions);
-                return CreateRdapObject<T>(node, context);
-            }
-            catch (RdapJsonException)
-            {
-                throw;
-            }
-            //catch (Exception exception)
-            //{
-            //    throw new RdapJsonException(exception.Message, exception);
-            //}
+            var node = JsonSerializer.Deserialize<JsonNode>(json, _deserializeOptions);
+            return CreateRdapObject<T>(node, context);
         }
 
         private static T CreateRdapObject<T>(JsonNode node, RdapSerializerContext context)
@@ -79,6 +68,12 @@ namespace DarkPeakLabs.Rdap.Serialization
 
         private static object CreateRdapObject(object instance, Type type, JsonNode node, RdapSerializerContext context)
         {
+            if (node is not JsonObject)
+            {
+                context.AddJsonViolationError(node, $"JSON token does not represent an object");
+                return null;
+            }
+
             foreach(var property in type.GetJsonProperties())
             {
                 var propertyNode = node[property.JsonPropertyName];
@@ -86,7 +81,7 @@ namespace DarkPeakLabs.Rdap.Serialization
                 {
                     if (property.IsRequired)
                     {
-                        context.AddJsonViolationError($"Required JSON property {property.JsonPropertyName} is not found");
+                        context.AddJsonViolationError(node, $"Required JSON property {property.JsonPropertyName} is not found");
                     }
                     continue;
                 }

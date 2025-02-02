@@ -46,16 +46,19 @@ internal sealed class Program
     private static void GenerateCode(string solutionRoot)
     {
         var code = RdapEnumCodeGenerator.GenerateLinkRelationEnumAsync().GetAwaiter().GetResult();
-        code.SaveAs(Path.Combine(solutionRoot, @"Rdap\Values\Json\RdapLinkRelationType.cs"));
+        code.SaveAs(Path.Combine(solutionRoot, @"Rdap\Values\RdapLinkRelationType.cs"));
 
         code = RdapEnumCodeGenerator.GenerateStatusEnumAsync().GetAwaiter().GetResult();
-        code.SaveAs(Path.Combine(solutionRoot, @"Rdap\Values\Json\RdapStatus.cs"));
+        code.SaveAs(Path.Combine(solutionRoot, @"Rdap\Values\RdapStatus.cs"));
 
         code = RdapEnumCodeGenerator.GenerateEventActionEnumAsync().GetAwaiter().GetResult();
-        code.SaveAs(Path.Combine(solutionRoot, @"Rdap\Values\Json\RdapEventAction.cs"));
+        code.SaveAs(Path.Combine(solutionRoot, @"Rdap\Values\RdapEventAction.cs"));
         code = RdapEnumCodeGenerator.GenerateEntityRoleEnumAsync().GetAwaiter().GetResult();
-        code.SaveAs(Path.Combine(solutionRoot, @"Rdap\Values\Json\RdapEntityRole.cs"));
+        code.SaveAs(Path.Combine(solutionRoot, @"Rdap\Values\RdapEntityRole.cs"));
         code = RdapEnumCodeGenerator.GenerateNoticeAndRemarkTypeEnumAsync().GetAwaiter().GetResult();
-        code.SaveAs(Path.Combine(solutionRoot, @"Rdap\Values\Json\RdapNoticeAndRemarkType.cs"));
+        code.SaveAs(Path.Combine(solutionRoot, @"Rdap\Values\RdapNoticeAndRemarkType.cs"));
+
+        code = RdapEnumCodeGenerator.GenerateDnsSecurityAlgorithmNumbersAsync().GetAwaiter().GetResult();
+        code.SaveAs(Path.Combine(solutionRoot, @"Rdap\Values\DnsSecAlgorithmType.cs"));
     }
 }

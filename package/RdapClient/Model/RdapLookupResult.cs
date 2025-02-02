@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using DarkPeakLabs.Rdap.Conformance;
 
 namespace DarkPeakLabs.Rdap
@@ -8,7 +10,10 @@ namespace DarkPeakLabs.Rdap
         /// <summary>
         /// Raw string Json response from last successful request
         /// </summary>
-        public string RawJson { get; internal set; }
+        public string HttpResponseBody { get; internal set; }
+        public HttpResponseHeaders HttpResponseHeaders { get; internal set; }
+        public HttpRequestHeaders HttpRequestHeaders { get; internal set; }
+        public Version HttpVersion { get; internal set; }
 
         /// <summary>
         ///
@@ -22,5 +27,8 @@ namespace DarkPeakLabs.Rdap
         public DateTimeOffset? RequestFailed { get; internal set; }
         public DateTimeOffset? DataReadStarted { get; internal set; }
         public DateTimeOffset? DataReadFinished { get; internal set; }
+        public HttpMethod HttpRequestMethod { get; internal set; }
+        public Uri HttpRequestUri { get; internal set; }
+        public HttpContentHeaders HttpContentHeaders { get; internal set; }
     }
 }

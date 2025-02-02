@@ -135,7 +135,7 @@ namespace DarkPeakLabs.Rdap.Utilities
                     HasHeaderRecord = hasHeaderRecord
                 });
 
-            await foreach (var record in csv.GetRecordsAsync<T>())
+            await foreach (var record in csv.GetRecordsAsync<T>().ConfigureAwait(false))
             {
                 domainSet.Add(record.Domain);
             }

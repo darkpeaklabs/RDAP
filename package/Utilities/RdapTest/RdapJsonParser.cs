@@ -22,7 +22,7 @@ namespace DarkPeakLabs.Rdap.Utilities
                     var json = reader.ReadToEnd();
                     var domains = RdapSerializer.Deserialize<RdapDomainLookupResponse>(json);
                 }
-                catch(RdapJsonException exception)
+                catch(RdapSerializerException exception)
                 {
                     Console.WriteLine(exception.Message);
                 }

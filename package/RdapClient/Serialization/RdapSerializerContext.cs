@@ -12,31 +12,21 @@ namespace DarkPeakLabs.Rdap.Serialization
 
         internal void AddJsonViolation(RdapConformanceViolationSeverity severity, JsonNode node, string message)
         {
-            Conformance.AddViolation(severity, RdapConformanceViolationCategory.JSON, $"JSON path: {node.GetPath()}, {message}");
-        }
-
-        internal void AddJsonViolation(RdapConformanceViolationSeverity severity, string message)
-        {
-            Conformance.AddViolation(severity, RdapConformanceViolationCategory.JSON, message);
+            Conformance.AddViolation(
+                new RdapResponseJsonConformanceViolation(
+                    severity, RdapConformanceViolationCategory.JSON,
+                    message,
+                    node));
         }
 
         internal void AddJsonViolationError(JsonNode node, string message)
         {
             AddJsonViolation(RdapConformanceViolationSeverity.Error, node, message);
         }
-        internal void AddJsonViolationError(string message)
-        {
-            AddJsonViolation(RdapConformanceViolationSeverity.Error, message);
-        }
 
         internal void AddJsonViolationWarning(JsonNode node, string message)
         {
             AddJsonViolation(RdapConformanceViolationSeverity.Warning, node, message);
-        }
-
-        internal void AddJsonViolationWarning(string message)
-        {
-            AddJsonViolation(RdapConformanceViolationSeverity.Warning, message);
         }
 
         internal void LogCritical(string message, params object[] args)

@@ -62,6 +62,24 @@ public static class RdapEnumCodeGenerator
         writer.Write(code);
     }
 
+    public static async Task<string> GenerateDnsSecurityAlgorithmNumbersAsync()
+    {
+        using IANARegistryClient client = new IANARegistryClient();
+        var numbers = await client.GetDnsSecurityAlgorithmNumbersAsync().ConfigureAwait(false);
+
+        var type = typeof(DnsSecAlgorithmType);
+        StringBuilder sourceCode = new StringBuilder();
+        sourceCode.AppendHeader(type);
+
+        foreach (var number in numbers)
+        {
+            sourceCode.AppendValue(number.Value, number.Description);
+        }
+
+        sourceCode.AppendFooter();
+        return sourceCode.ToString();
+    }
+
     private static async Task<string> GenerateJsonValueEnumsAsync(Type type, string valueType)
     {
         if (jsonValues == null)

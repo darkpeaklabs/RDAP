@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Mime;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -31,6 +32,8 @@ public sealed class RdapClient : IDisposable
     private readonly IdnMapping idnMapping = new();
 
     public TimeSpan Timeout { get => httpClient.Timeout; set => httpClient.Timeout = value; }
+
+    public HttpRequestHeaders HttpRequestHeaders => httpClient.DefaultRequestHeaders;
 
     /// <summary>
     /// Client class constructor
@@ -57,6 +60,18 @@ public sealed class RdapClient : IDisposable
 
         // setting HttpClient.Timeout ensures TaskCanceledException is thrown when timeout is exceeded
         httpClient.Timeout = httpClient.Timeout;
+
+        httpClient.DefaultRequestHeaders.Accept.Clear();
+        httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
+        httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/rdap+json"));
+
+        httpClient.DefaultRequestHeaders.UserAgent.Clear();
+        var rdapClientType = GetType();
+        httpClient.DefaultRequestHeaders.UserAgent.Add(
+            new ProductInfoHeaderValue(
+                rdapClientType.FullName,
+                rdapClientType.Assembly.GetName().Version.ToString()));
     }
 
     public void AddBasicAuthentication(string username, SecureString password)
@@ -253,23 +268,33 @@ public sealed class RdapClient : IDisposable
 
             if (response.IsSuccessStatusCode)
             {
-                if (response.Content.Headers?.ContentType?.MediaType != null)
+                result.DataReadStarted = DateTime.UtcNow;
+                result.HttpResponseBody = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                result.HttpVersion = response.Version;
+                result.HttpResponseHeaders = response.Headers;
+                result.HttpRequestHeaders = response.RequestMessage.Headers;
+                result.HttpRequestMethod = response.RequestMessage.Method;
+                result.HttpRequestUri = response.RequestMessage.RequestUri;
+                result.DataReadFinished = DateTime.UtcNow;
+
+                if (response.Content.Headers != null)
                 {
-                    if (response.Content.Headers.ContentType.MediaType != "application/rdap+json")
+                    result.HttpContentHeaders = response.Content.Headers;
+                    var contentType = response.Content.Headers.ContentType?.MediaType;
+
+                    if (contentType == null)
                     {
-                        result.Conformance.AddImplementationViolation(RdapConformanceViolationSeverity.Warning, $"{response.Content.Headers.ContentType.MediaType} differs from expected application/rdap+json Content-Type header value");
+                        result.Conformance.AddImplementationViolation(
+                            RdapConformanceViolationSeverity.Warning,
+                            $"Server did not include expected application/rdap+json Content-Type header value");
                     }
-                    else
+                    else if (contentType != "application/rdap+json")
                     {
-                        result.Conformance.AddImplementationViolation(RdapConformanceViolationSeverity.Warning, $"Server did not include expected application/rdap+json Content-Type header value");
+                        result.Conformance.AddImplementationViolation(
+                            RdapConformanceViolationSeverity.Warning,
+                            $"{response.Content.Headers.ContentType.MediaType} differs from expected application/rdap+json Content-Type header value");
                     }
                 }
-
-                _logger?.LogDebug("Server responded {StatusCode} - url:{RdapQuery}, content length: {ContentLength}", response.StatusCode, requestUri, response.Content.Headers.ContentLength);
-
-                result.DataReadStarted = DateTime.UtcNow;
-                result.RawJson = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                result.DataReadFinished = DateTime.UtcNow;
             }
             else
             {
@@ -277,12 +302,16 @@ public sealed class RdapClient : IDisposable
                 throw new RdapRequestException(response);
             }
         }
+        catch (RdapRequestException)
+        {
+            // rethrow
+            throw;
+        }
         catch (TaskCanceledException exception)
         {
             result.RequestSent = httpClientHandler.RequestSent;
             result.RequestFailed = DateTime.UtcNow;
 
-            _logger?.LogError("RDAP client timeout - url:{RdapQuery}, Error: {Error}", requestUri, $"RDAP server did not respond in allocated time {httpClient.Timeout}");
             throw new RdapClientTimeoutException($"RDAP server did not respond in allocated time {httpClient.Timeout}", exception);
         }
         catch (HttpRequestException exception)
@@ -290,26 +319,30 @@ public sealed class RdapClient : IDisposable
             result.RequestSent = httpClientHandler.RequestSent;
             result.RequestFailed = DateTime.UtcNow;
 
-            _logger?.LogError("Error sending request to RDAP Server - url:{RdapQuery}, Error: {Error}", requestUri, exception.Message);
             throw new RdapHttpException("Error sending request to RDAP Server", exception);
         }
-        catch (Exception)
+        catch (Exception exception)
         {
             result.RequestSent = httpClientHandler.RequestSent;
             result.RequestFailed = DateTime.UtcNow;
-            throw;
+            throw new RdapHttpException(exception.Message, exception);
         }
 
         try
         {
-            result.Value = RdapSerializer.Deserialize<T>(result.RawJson, result.Conformance);
-            _logger?.LogWarning("Found {ConformanceViolationCount} RDAP conformance violations.", result.Conformance.Violations.Count);
+            result.Value = RdapSerializer.Deserialize<T>(result.HttpResponseBody, result.Conformance);
             return result;
         }
-        catch (RdapJsonException exception)
+        //catch (Exception exception)
+        //{
+        //    throw new RdapSerializerException(
+        //        exception.Message,
+        //        result.HttpResponseBody,
+        //        exception);
+        //}
+        finally
         {
-            exception.Json = result.RawJson;
-            throw;
+
         }
     }
 

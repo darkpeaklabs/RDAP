@@ -9,6 +9,10 @@ namespace DarkPeakLabs.Rdap.Serialization
 {
     /// <summary>
     /// Json converter for RDAP contact
+    /// jCard JSON is defined in
+    /// <see cref="https://tools.ietf.org/html/rfc7483">RFC 7483</see>
+    /// and
+    /// <see cref="https://tools.ietf.org/html/rfc6350">RFC 6350</see>
     /// </summary>
     internal class RdapContactConverter
     {
@@ -119,13 +123,13 @@ namespace DarkPeakLabs.Rdap.Serialization
                                 context.AddJsonViolationWarning(propertyJsonNode, $"{property.Values[0]} is not valid kind property value for organization.");
                                 contact.Kind = RdapContactKind.Organization;
                             }
-                            else if (RdapEnumHelper.TryParseString(property.Values[0], out RdapContactKind kind))
+                            else if (RdapEnumConverter.TryParseString(property.Values[0], out RdapContactKind kind))
                             {
                                 contact.Kind = kind;
                             }
                             else
                             {
-                                context.AddJsonViolationError($"{property.Values[0]} is not valid kind property value.");
+                                context.AddJsonViolationError(propertyJsonNode, $"{property.Values[0]} is not valid kind property value.");
                                 contact.Kind= RdapContactKind.Unknown;
                             }
                         }
@@ -176,7 +180,7 @@ namespace DarkPeakLabs.Rdap.Serialization
                                 List<RdapPhoneNumberType> phoneNumberTypes = [];
                                 foreach (string parameterValue in parameterValues)
                                 {
-                                    if (RdapEnumHelper.TryParseString(parameterValue, out RdapPhoneNumberType phoneNumberType))
+                                    if (RdapEnumConverter.TryParseString(parameterValue, out RdapPhoneNumberType phoneNumberType))
                                     {
                                         phoneNumberTypes.Add(phoneNumberType);
                                     }
