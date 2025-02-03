@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using DarkPeakLabs.Rdap.Conformance;
@@ -174,11 +175,18 @@ namespace DarkPeakLabs.Rdap.Serialization
 
             if (type.IsEnum)
             {
-                if (RdapEnumConverter.TryGetValue(jsonValue, type, context, out var value))
+                var typeAttributes = type.GetCustomAttributes(inherit: true);
+                if (typeAttributes.Any(x => x.GetType() == typeof(FlagsAttribute)))
+                {
+                    if (RdapFlagsEnumConverter.TryGetValue(jsonValue, type, context, out var value))
+                    {
+                        return value;
+                    };
+                }
+                else if (RdapEnumConverter.TryGetValue(jsonValue, type, context, out var value))
                 {
                     return value;
                 };
-                context.AddJsonViolationError(jsonValue, $"Unable to read property {propertyName} value");
                 return null;
             }
             else if (type == typeof(string))

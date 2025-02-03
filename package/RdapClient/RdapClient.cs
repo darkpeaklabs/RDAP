@@ -333,13 +333,13 @@ public sealed class RdapClient : IDisposable
             result.Value = RdapSerializer.Deserialize<T>(result.HttpResponseBody, result.Conformance);
             return result;
         }
-        //catch (Exception exception)
-        //{
-        //    throw new RdapSerializerException(
-        //        exception.Message,
-        //        result.HttpResponseBody,
-        //        exception);
-        //}
+        catch (Exception exception)
+        {
+            throw new RdapSerializerException(
+                exception.Message,
+                result.HttpResponseBody,
+                exception);
+        }
         finally
         {
 

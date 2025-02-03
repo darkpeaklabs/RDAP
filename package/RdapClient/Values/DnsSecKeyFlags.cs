@@ -1,13 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace DarkPeakLabs.Rdap.Values
 {
 #pragma warning disable CA1711
-    public enum DnsSecKeyFlag
+#pragma warning disable CA2217
+    [Flags]
+    public enum DnsSecKeyFlags
 #pragma warning restore CA1711
+#pragma warning restore CA2217
     {
-        Unknown = -1,
-
         /// <summary>
         ///   <para>ZONE</para>
         ///   <para>

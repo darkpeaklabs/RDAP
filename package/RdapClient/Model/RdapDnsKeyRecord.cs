@@ -14,7 +14,7 @@ namespace DarkPeakLabs.Rdap
         /// an integer representing the flags field value in the DNSKEY record RFC4034 in presentation format
         /// </summary>
         [JsonPropertyName("flags")]
-        public DnsSecKeyFlag? Flags { get; set; }
+        public DnsSecKeyFlags? Flags { get; set; }
 
         /// <summary>
         /// an integer representation of the protocol field value of the DNSKEY record RFC4034 in presentation format
