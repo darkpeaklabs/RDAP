@@ -61,6 +61,16 @@ public class IANARegistryClient : CsvHttpClient
         return await GetRecordsAsync<RdapJsonValue>(new Uri("https://www.iana.org/assignments/rdap-json-values/rdap-json-values-1.csv")).ConfigureAwait(false);
     }
 
+    public async Task<IEnumerable<DnsSecAlgorithmNumber>> GetDnsSecAlgorithmNumbersAsync()
+    {
+        return await GetRecordsAsync<DnsSecAlgorithmNumber>(new Uri("https://www.iana.org/assignments/dns-sec-alg-numbers/dns-sec-alg-numbers-1.csv")).ConfigureAwait(false);
+    }
+
+    public async Task<IEnumerable<DnsSecDigestTypeValue>> GetDnsSecDigestTypesAsync()
+    {
+        return await GetRecordsAsync<DnsSecDigestTypeValue>(new Uri("https://www.iana.org/assignments/ds-rr-types/ds-rr-types-1.csv")).ConfigureAwait(false);
+    }
+
     /// <summary>
     /// Get IANA Link Relations registry
     /// </summary>

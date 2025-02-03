@@ -1,9 +1,8 @@
-﻿using LazyCache;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using LazyCache;
+using Microsoft.Extensions.Logging;
 
 namespace DarkPeakLabs.Rdap.Bootstrap;
 
@@ -31,7 +30,7 @@ public abstract class RdapBootstrap
     /// </summary>
     /// <param name="urls">list of urls</param>
     /// <returns></returns>
-    protected static Uri SelectUrl(IReadOnlyCollection<Uri> urls)
+    protected static Uri SelectUrl(IReadOnlyList<Uri> urls)
     {
         _ = urls ?? throw new ArgumentNullException(paramName: nameof(urls));
 
@@ -42,7 +41,7 @@ public abstract class RdapBootstrap
                 return url;
             }
         }
-        return urls.First();
+        return urls[0];
     }
 
     protected async Task<T> GetOrAddCacheItemAsync<T>(string key, Func<Task<T>> addItemFactory)

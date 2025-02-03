@@ -11,10 +11,10 @@ public class RdapServiceRegistryItem
     /// <summary>
     /// Entries that have the same set of base RDAP URLs
     /// </summary>
-    public IReadOnlyCollection<string> Entries { get; set; }
+    public IReadOnlyList<string> Entries { get; set; }
 
     /// <summary>
     /// Base RDAP URLs usable for the entries
     /// </summary>
-    public IReadOnlyCollection<Uri> ServiceUrls { get; set; }
+    public IReadOnlyList<Uri> ServiceUrls { get; set; }
 }

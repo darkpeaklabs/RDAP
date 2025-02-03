@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using DarkPeakLabs.Rdap.Conformance;
 using DarkPeakLabs.Rdap.Serialization;
-using DarkPeakLabs.Rdap.Values.Json;
+using DarkPeakLabs.Rdap.Values;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DarkPeakLabs.Rdap.Test
@@ -49,7 +49,8 @@ namespace DarkPeakLabs.Rdap.Test
         [DataRow("jcard_invalid_1.json")]
         public void TestInvalidJCard(string filename)
         {
-            RdapEntity entity = RdapSerializer.Deserialize<RdapEntity>(ReadJsonFile(filename), out RdapConformance conformance);
+            RdapConformance conformance = new();
+            RdapEntity entity = RdapSerializer.Deserialize<RdapEntity>(ReadJsonFile(filename), conformance);
             foreach (RdapEntity item in entity.Entities)
             {
                 Assert.IsTrue(item.Contact == null || item.Contact.FullName == null);
@@ -61,8 +62,9 @@ namespace DarkPeakLabs.Rdap.Test
         [DataRow("jcard_invalid_2.json")]
         public void TestInvalidJCard2(string filename)
         {
-            RdapEntity entity = RdapSerializer.Deserialize<RdapEntity>(ReadJsonFile(filename), out RdapConformance conformance);
-            Assert.IsNull(entity.Contact.FullName);
+            RdapConformance conformance = new();
+            RdapEntity entity = RdapSerializer.Deserialize<RdapEntity>(ReadJsonFile(filename), conformance);
+            Assert.IsNull(entity.Contact);
             Assert.IsTrue(conformance.Violations != null && conformance.Violations.Count > 0);
         }
 
@@ -70,7 +72,8 @@ namespace DarkPeakLabs.Rdap.Test
         [DataRow("jcard_invalid_3.json")]
         public void TestInvalidJCard3(string filename)
         {
-            RdapEntity entity = RdapSerializer.Deserialize<RdapEntity>(ReadJsonFile(filename), out RdapConformance conformance);
+            RdapConformance conformance = new();
+            RdapEntity entity = RdapSerializer.Deserialize<RdapEntity>(ReadJsonFile(filename), conformance);
             foreach (RdapEntity item in entity.Entities)
             {
                 Assert.IsNotNull(item.Contact);

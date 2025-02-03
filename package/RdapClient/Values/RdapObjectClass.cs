@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DarkPeakLabs.Rdap.Values.Json
+namespace DarkPeakLabs.Rdap.Values
 {
     /// <summary>
     /// This identifies the type of RDAP object

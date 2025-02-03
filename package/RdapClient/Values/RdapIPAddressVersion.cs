@@ -1,4 +1,4 @@
-﻿namespace DarkPeakLabs.Rdap.Values.Json
+﻿namespace DarkPeakLabs.Rdap.Values
 {
     public enum RdapIPAddressVersion
     {

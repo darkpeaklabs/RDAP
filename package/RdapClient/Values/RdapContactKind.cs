@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DarkPeakLabs.Rdap.Values.Json
+namespace DarkPeakLabs.Rdap.Values
 {
     /// <summary>
     /// The kind of the entity the Contact represents

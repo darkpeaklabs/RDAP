@@ -2,7 +2,7 @@
   "profiles": {
     "RdapTest": {
       "commandName": "Project",
-      "commandLineArgs": "parse -p c:\\code\\rdap\\json"
+      "commandLineArgs": "test -p c:\\code\\rdap"
     }
   }
 }

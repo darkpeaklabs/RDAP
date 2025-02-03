@@ -12,12 +12,12 @@ namespace DarkPeakLabs.Rdap
         /// an array of strings containing IPv6 addresses of the nameserver
         /// </summary>
         [JsonPropertyName("v6")]
-        public IReadOnlyCollection<string> IPv6Addresses { get; set; }
+        public IReadOnlyList<string> IPv6Addresses { get; set; }
 
         /// <summary>
         /// an array of strings containing IPv4 addresses of the nameserver
         /// </summary>
         [JsonPropertyName("v4")]
-        public IReadOnlyCollection<string> IPv4Addresses { get; set; }
+        public IReadOnlyList<string> IPv4Addresses { get; set; }
     }
 }

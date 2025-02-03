@@ -1,0 +1,171 @@
+{
+  "objectClassName": "domain",
+  "handle": "2336799_DOMAIN_COM-VRSN",
+  "ldhName": "EXAMPLE.COM",
+  "links": [
+    {
+      "value": "https://rdap.verisign.com/com/v1/domain/EXAMPLE.COM",
+      "rel": "self",
+      "href": "https://rdap.verisign.com/com/v1/domain/EXAMPLE.COM",
+      "type": "application/rdap+json"
+    }
+  ],
+  "status": [
+    "client delete prohibited",
+    "client transfer prohibited",
+    "client update prohibited"
+  ],
+  "entities": [
+    {
+      "objectClassName": "entity",
+      "handle": "376",
+      "roles": [
+        "registrar"
+      ],
+      "publicIds": [
+        {
+          "type": "IANA Registrar ID",
+          "identifier": "376"
+        }
+      ],
+      "vcardArray": [
+        "vcard",
+        [
+          [
+            "version",
+            {},
+            "text",
+            "4.0"
+          ],
+          [
+            "fn",
+            {},
+            "text",
+            "RESERVED-Internet Assigned Numbers Authority"
+          ]
+        ]
+      ],
+      "entities": [
+        {
+          "objectClassName": "entity",
+          "roles": [
+            "abuse"
+          ],
+          "vcardArray": [
+            "vcard",
+            [
+              [
+                "version",
+                {},
+                "text",
+                "4.0"
+              ],
+              [
+                "fn",
+                {},
+                "text",
+                ""
+              ],
+              [
+                "tel",
+                {
+                  "type": "voice"
+                },
+                "uri",
+                ""
+              ],
+              [
+                "email",
+                {},
+                "text",
+                ""
+              ]
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "eventAction": "registration",
+      "eventDate": "1995-08-14T04:00:00Z"
+    },
+    {
+      "eventAction": "expiration",
+      "eventDate": "2025-08-13T04:00:00Z"
+    },
+    {
+      "eventAction": "last changed",
+      "eventDate": "2024-08-14T07:01:34Z"
+    },
+    {
+      "eventAction": "last update of RDAP database",
+      "eventDate": "2025-01-28T17:58:39Z"
+    }
+  ],
+  "secureDNS": {
+    "delegationSigned": true,
+    "dsData": [
+      {
+        "keyTag": 370,
+        "algorithm": 13,
+        "digestType": 2,
+        "digest": "BE74359954660069D5C63D200C39F5603827D7DD02B56F120EE9F3A86764247C"
+      }
+    ]
+  },
+  "nameservers": [
+    {
+      "objectClassName": "nameserver",
+      "ldhName": "A.IANA-SERVERS.NET"
+    },
+    {
+      "objectClassName": "nameserver",
+      "ldhName": "B.IANA-SERVERS.NET"
+    }
+  ],
+  "rdapConformance": [
+    "rdap_level_0",
+    "icann_rdap_technical_implementation_guide_0",
+    "icann_rdap_response_profile_0"
+  ],
+  "notices": [
+    {
+      "title": "Terms of Use",
+      "description": [
+        "Service subject to Terms of Use."
+      ],
+      "links": [
+        {
+          "href": "https://www.verisign.com/domain-names/registration-data-access-protocol/terms-service/index.xhtml",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "title": "Status Codes",
+      "description": [
+        "For more information on domain status codes, please visit https://icann.org/epp"
+      ],
+      "links": [
+        {
+          "href": "https://icann.org/epp",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "title": "RDDS Inaccuracy Complaint Form",
+      "description": [
+        "URL of the ICANN RDDS Inaccuracy Complaint Form: https://icann.org/wicf"
+      ],
+      "links": [
+        {
+          "href": "https://icann.org/wicf",
+          "type": "text/html"
+        }
+      ]
+    }
+  ]
+}

@@ -12,12 +12,12 @@ namespace DarkPeakLabs.Rdap
         /// links to other resources on the Internet
         /// </summary>
         [JsonPropertyName("links")]
-        public IReadOnlyCollection<RdapLink> Links { get; set; }
+        public IReadOnlyList<RdapLink> Links { get; set; }
 
         /// <summary>
         /// events that have occurred on an instance of an object class
         /// </summary>
         [JsonPropertyName("events")]
-        public IReadOnlyCollection<RdapEvent> Events { get; set; }
+        public IReadOnlyList<RdapEvent> Events { get; set; }
     }
 }

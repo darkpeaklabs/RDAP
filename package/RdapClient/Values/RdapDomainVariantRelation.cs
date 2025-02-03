@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DarkPeakLabs.Rdap.Values.Json
+namespace DarkPeakLabs.Rdap.Values
 {
     /// <summary>
     /// The relationship between the variants and the containing domain object

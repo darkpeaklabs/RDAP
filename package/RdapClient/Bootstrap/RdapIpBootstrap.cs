@@ -47,18 +47,18 @@ public class RdapIpBootstrap : RdapBootstrap
         throw new RdapBootstrapException($"Unable to find any service url in IP service registry for address '{value}'");
     }
 
-    private async Task<List<(IReadOnlyCollection<IPAddressRange> IPAddressRanges, IReadOnlyCollection<Uri> ServiceUrls)>> GetIpv4ServiceLookupListAsync()
+    private async Task<List<(IReadOnlyList<IPAddressRange> IPAddressRanges, IReadOnlyList<Uri> ServiceUrls)>> GetIpv4ServiceLookupListAsync()
     {
         return await GetOrAddCacheItemAsync("ipv4", () => CreateIPv4ServiceLookupListAsync()).ConfigureAwait(false);
     }
 
-    private async Task<List<(IReadOnlyCollection<IPAddressRange> IPAddressRanges, IReadOnlyCollection<Uri> ServiceUrls)>> GetIpv6ServiceLookupListAsync()
+    private async Task<List<(IReadOnlyList<IPAddressRange> IPAddressRanges, IReadOnlyList<Uri> ServiceUrls)>> GetIpv6ServiceLookupListAsync()
     {
         return await GetOrAddCacheItemAsync("ipv6", () => CreateIPv6ServiceLookupListAsync()).ConfigureAwait(false);
     }
 
 
-    private async Task<List<(IReadOnlyCollection<IPAddressRange> IPAddressRanges, IReadOnlyCollection<Uri> ServiceUrls)>> CreateIPv4ServiceLookupListAsync()
+    private async Task<List<(IReadOnlyList<IPAddressRange> IPAddressRanges, IReadOnlyList<Uri> ServiceUrls)>> CreateIPv4ServiceLookupListAsync()
     {
         Logger?.LogDebug("Creating IPv4 service lookup list");
 
@@ -67,7 +67,7 @@ public class RdapIpBootstrap : RdapBootstrap
         return CreateIPAddressServiceLookupList(serviceRegistry);
     }
 
-    private async Task<List<(IReadOnlyCollection<IPAddressRange> IPAddressRanges, IReadOnlyCollection<Uri> ServiceUrls)>> CreateIPv6ServiceLookupListAsync()
+    private async Task<List<(IReadOnlyList<IPAddressRange> IPAddressRanges, IReadOnlyList<Uri> ServiceUrls)>> CreateIPv6ServiceLookupListAsync()
     {
         Logger?.LogDebug("Creating IPv6 service lookup list");
 
@@ -77,9 +77,9 @@ public class RdapIpBootstrap : RdapBootstrap
     }
 
 
-    private static List<(IReadOnlyCollection<IPAddressRange> IPAddressRanges, IReadOnlyCollection<Uri> ServiceUrls)> CreateIPAddressServiceLookupList(RdapServiceRegistry serviceRegistry)
+    private static List<(IReadOnlyList<IPAddressRange> IPAddressRanges, IReadOnlyList<Uri> ServiceUrls)> CreateIPAddressServiceLookupList(RdapServiceRegistry serviceRegistry)
     {
-        var lookupList = new List<(IReadOnlyCollection<IPAddressRange> IPAddressRanges, IReadOnlyCollection<Uri> ServiceUrls)>();
+        var lookupList = new List<(IReadOnlyList<IPAddressRange> IPAddressRanges, IReadOnlyList<Uri> ServiceUrls)>();
 
         foreach (var service in serviceRegistry.Services)
         {

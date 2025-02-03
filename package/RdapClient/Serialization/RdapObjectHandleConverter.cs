@@ -1,90 +1,49 @@
-﻿using DarkPeakLabs.Rdap.Conformance;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text.Json;
-using System.Text.Json.Serialization;
+using System.Text.Json.Nodes;
 
 namespace DarkPeakLabs.Rdap.Serialization
 {
     /// <summary>
     /// Json converter for object handle
     /// </summary>
-    internal class RdapObjectHandleConverter : JsonConverter<RdapObjectHandle>
+    internal class RdapObjectHandleConverter
     {
-        /// <summary>
-        /// Class logger
-        /// </summary>
-        private ILogger _logger;
-
-        /// <summary>
-        /// RDAP conformance
-        /// </summary>
-        private readonly RdapConformance conformance;
-
-        /// <summary>
-        /// constructor
-        /// </summary>
-        /// <param name="errors"></param>
-        public RdapObjectHandleConverter(RdapConformance conformance, ILogger logger = null)
+        public static bool TryGetValue(JsonNode jsonNode, RdapSerializerContext context, out RdapObjectHandle objectHandle)
         {
-            this.conformance = conformance;
-            _logger = logger;
-        }
+            objectHandle = default;
+            string objectHandleValue;
+            JsonValueKind valueKind = jsonNode.GetValueKind();
 
-        /// <summary>
-        /// Reads and parses object handle value
-        /// </summary>
-        /// <param name="reader"></param>
-        /// <param name="typeToConvert"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        public override RdapObjectHandle Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            string value;
-            switch (reader.TokenType)
+            switch (valueKind)
             {
-                case JsonTokenType.String:
-                    value = reader.GetString();
+                case JsonValueKind.String:
+                    objectHandleValue = jsonNode.GetValue<string>();
                     break;
 
-                case JsonTokenType.Number:
-                    conformance.AddJsonViolation(RdapConformanceViolationSeverity.Warning, ref reader, "Object handle should be a string. Response contains a number.");
-                    value = reader.GetInt32().ToString(CultureInfo.InvariantCulture);
+                case JsonValueKind.Number:
+                    context.AddJsonViolationWarning(jsonNode, "Object handle should be a string not a number.");
+                    objectHandleValue = jsonNode.GetValue<int>().ToString(CultureInfo.InvariantCulture);
                     break;
 
                 default:
-                    throw new RdapJsonException($"Unexpected token type {reader.TokenType} when reading object handle", ref reader);
+                    context.AddJsonViolationError(jsonNode, $"{valueKind} is not a valid JSON token type for object handle property {jsonNode.GetPropertyName()}");
+                    return false;
             }
 
-            string tag = null;
-
-            _logger?.LogDebug("Converting string value {Value} to RDAP object handle", value);
-
-            int tagIndex = value.LastIndexOf('-');
-
-            if ((tagIndex != -1) && (tagIndex + 1 < value.Length))
+            objectHandle = new RdapObjectHandle()
             {
-                tag = value.Substring(tagIndex + 1);
-                _logger?.LogDebug("Found object handle tag {Tag}", tag);
-            }
-
-            return new RdapObjectHandle()
-            {
-                Value = value,
-                Tag = tag
+                Value = objectHandleValue
             };
-        }
 
-        /// <summary>
-        /// Not implemented
-        /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="value"></param>
-        /// <param name="options"></param>
-        public override void Write(Utf8JsonWriter writer, RdapObjectHandle value, JsonSerializerOptions options)
-        {
-            throw new NotImplementedException();
+            int tagIndex = objectHandleValue.LastIndexOf('-');
+
+            if ((tagIndex != -1) && (tagIndex + 1 < objectHandleValue.Length))
+            {
+                objectHandle.Tag = objectHandleValue[(tagIndex + 1)..];
+            }
+
+            return true;
         }
     }
 }

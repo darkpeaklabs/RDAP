@@ -16,7 +16,7 @@ internal static class Utf8JsonReaderExtensions
     /// <returns></returns>
     internal static List<List<string>> ReadArrayOfArraysOfStrings(this ref Utf8JsonReader reader, int numberOfArrays)
     {
-        List<List<string>> arrayOfArrays = new List<List<string>>();
+        List<List<string>> arrayOfArrays = [];
 
         // read array start of arrays
         if (reader.TokenType != JsonTokenType.StartArray)

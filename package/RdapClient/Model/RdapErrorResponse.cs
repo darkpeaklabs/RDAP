@@ -26,10 +26,10 @@ namespace DarkPeakLabs.Rdap
         [JsonPropertyName("description")]
 
         //IRespose interface
-        public IReadOnlyCollection<string> Description { get; set; }
+        public IReadOnlyList<string> Description { get; set; }
 
-        public IReadOnlyCollection<string> Conformance { get; set; }
-        public IReadOnlyCollection<RdapNotice> Notices { get; set; }
+        public IReadOnlyList<string> Conformance { get; set; }
+        public IReadOnlyList<RdapNotice> Notices { get; set; }
         public string Language { get; set; }
     }
 }

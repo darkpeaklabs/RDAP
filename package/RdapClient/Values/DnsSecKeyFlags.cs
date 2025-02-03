@@ -1,17 +1,15 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace DarkPeakLabs.Rdap.Values.DnsSec
+namespace DarkPeakLabs.Rdap.Values
 {
+#pragma warning disable CA1711
+#pragma warning disable CA2217
     [Flags]
-#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
-#pragma warning disable CA2217 // Do not mark enums with FlagsAttribute
-    public enum DnsKeyFlags : int
-#pragma warning restore CA2217 // Do not mark enums with FlagsAttribute
-#pragma warning restore CA1711 // Identifiers should not have incorrect suffix
+    public enum DnsSecKeyFlags
+#pragma warning restore CA1711
+#pragma warning restore CA2217
     {
-        Unknown = -1,
-
         /// <summary>
         ///   <para>ZONE</para>
         ///   <para>

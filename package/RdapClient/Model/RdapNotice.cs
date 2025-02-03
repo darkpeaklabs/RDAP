@@ -1,4 +1,4 @@
-﻿using DarkPeakLabs.Rdap.Values.Json;
+﻿using DarkPeakLabs.Rdap.Values;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -25,12 +25,12 @@ namespace DarkPeakLabs.Rdap
         /// strings for the purposes of conveying any descriptive text
         /// </summary>
         [JsonPropertyName("description")]
-        public IReadOnlyCollection<string> Description { get; set; }
+        public IReadOnlyList<string> Description { get; set; }
 
         /// <summary>
         /// Array of links
         /// </summary>
         [JsonPropertyName("links")]
-        public IReadOnlyCollection<RdapLink> Links { get; set; }
+        public IReadOnlyList<RdapLink> Links { get; set; }
     }
 }

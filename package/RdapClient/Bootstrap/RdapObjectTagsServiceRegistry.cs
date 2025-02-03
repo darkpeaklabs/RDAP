@@ -12,5 +12,5 @@ public class RdapObjectTagsServiceRegistry : RdapServiceRegistryBase
     /// List of registry services
     /// </summary>
     [JsonPropertyName("services")]
-    public IReadOnlyCollection<RdapObjectTagsServiceRegistryItem> Services { get; set; }
+    public IReadOnlyList<RdapObjectTagsServiceRegistryItem> Services { get; set; }
 }

@@ -27,6 +27,21 @@ public class RdapClientTest
     }
 
     [TestMethod]
+    public void TestDomainLookup2()
+    {
+        using RdapClient service = new RdapClient();
+        //squarespace requires user-agent header
+        var result = service.DomainLookupAsync(new Uri("https://rdap.squarespace.domains"), "mixpanel.com").GetAwaiter().GetResult();
+    }
+
+    [TestMethod]
+    public void TestDomainLookup3()
+    {
+        using RdapClient service = new RdapClient();
+        var result = service.DomainLookupAsync(new Uri("https://namerdap.systems"), "lastpass.com").GetAwaiter().GetResult();
+    }
+
+    [TestMethod]
     public void TestRdapException()
     {
         using RdapClient service = new RdapClient();

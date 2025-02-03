@@ -1,4 +1,4 @@
-﻿using DarkPeakLabs.Rdap.Values.Json;
+﻿using DarkPeakLabs.Rdap.Values;
 using Microsoft.Extensions.Logging;
 
 namespace DarkPeakLabs.Rdap.Serialization
@@ -10,7 +10,7 @@ namespace DarkPeakLabs.Rdap.Serialization
         /// for use in the Registration Data Access Protocol(RDAP), in the "RDAP JSON Values" registry.
         /// <see cref="https://tools.ietf.org/html/rfc8056">RFC 8056</see>
         /// </summary>
-        public static bool TryMapToRdap(string value, out RdapStatus result, ILogger logger = null)
+        public static bool TryMapToRdap(string value, out RdapStatus result)
         {
             switch (value)
             {
@@ -40,15 +40,6 @@ namespace DarkPeakLabs.Rdap.Serialization
                 case "transferPeriod": result = RdapStatus.TransferPeriod; break;
                 default: result = RdapStatus.Unknown; break;
             };
-
-            if (result != RdapStatus.Unknown)
-            {
-                logger?.LogDebug("Status string value {Value} mapped to value {Enum}", value, result);
-            }
-            else
-            {
-                logger?.LogWarning("Unable to map Status string value {Value} to RDAP JSON value", value);
-            }
 
             return result != RdapStatus.Unknown;
         }

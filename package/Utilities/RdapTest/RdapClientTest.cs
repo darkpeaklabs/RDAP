@@ -1,9 +1,11 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Net;
+using System.Text.Json;
 using DarkPeakLabs.PublicSuffix;
 using DarkPeakLabs.Rdap.Bootstrap;
-using DarkPeakLabs.Rdap.Values.Json;
+using DarkPeakLabs.Rdap.Values;
 
 namespace DarkPeakLabs.Rdap.Utilities;
 
@@ -41,6 +43,7 @@ public class RdapClientTest
         ConcurrentQueue<string> queue = new ConcurrentQueue<string>(domains);
 
         using StreamWriter writer = new StreamWriter(Path.Combine(_resultPath, $"test_result.csv"), append: false);
+        WriteCsvHeader(writer);
         await TestClientAsync(queue, writer).ConfigureAwait(false);
     }
 
@@ -86,7 +89,7 @@ public class RdapClientTest
     private async Task LookupDomainAsync(
         RdapClient client,
         Uri serviceUri,
-        string? domain,
+        string domain,
         StreamWriter writer,
         int threadIndex)
     {
@@ -99,14 +102,14 @@ public class RdapClientTest
 
         if (success && result != null)
         {
-            await ProcessDomainResponseAsync(client, result.Value, domain, [serviceUri.Host], writer, threadIndex).ConfigureAwait(false);
+            await ProcessDomainResponseAsync(client, result.Value, domain, [serviceUri.Host.ToUpperInvariant()], writer, threadIndex).ConfigureAwait(false);
         }
     }
 
     private async Task<(bool Success, T? Result)> TryExecuteLookupAsync<T>(
         Func<Task<T>> lookup,
         Uri serviceUri,
-        string? domain,
+        string domain,
         StreamWriter writer,
         int threadIndex) where T : class 
     {
@@ -158,7 +161,7 @@ public class RdapClientTest
         }
     }
 
-    private void LogError(StreamWriter writer, Uri? serviceUri, string? domain, Exception exception)
+    private void LogError(StreamWriter writer, Uri? serviceUri, string domain, Exception exception)
     {
         if (writer == null)
         {
@@ -176,7 +179,7 @@ public class RdapClientTest
             case RdapBootstrapException bootstrapException:
                 errorCode = "Bootstrap";
                 break;
-            case RdapJsonException jsonException:
+            case RdapSerializerException rdapSerializerException:
                 {
                     errorCode = "Json";
                     filename = $"{Guid.NewGuid()}.json";
@@ -188,8 +191,9 @@ public class RdapClientTest
                             Directory.CreateDirectory(jsonPath);
                         }
                     }
+
                     using StreamWriter jsonWriter = new StreamWriter(Path.Combine(jsonPath, filename), false);
-                    jsonWriter.Write(jsonException.Json);
+                    jsonWriter.Write(rdapSerializerException.ResponseBody);
                 }
                 break;
             default:
@@ -199,11 +203,11 @@ public class RdapClientTest
 
         lock (_lock)
         {
-            writer.WriteLine($"{errorCode},{GetCsvValue(serviceUri)},{GetCsvValue(domain)},\"{exception.Message}\",{GetCsvValue(filename)}" );
+            WriteCsvLine(writer, errorCode, serviceUri, domain, exception.Message, filename);
         }
     }
 
-    private static void LogSuccess(StreamWriter writer, Uri serviceUri, string? domain)
+    private static void LogSuccess(StreamWriter writer, Uri serviceUri, string domain)
     {
         if (writer == null)
         {
@@ -212,8 +216,18 @@ public class RdapClientTest
 
         lock (_lock)
         {
-            writer.WriteLine($"OK,{GetCsvValue(serviceUri)},{GetCsvValue(domain)},");
+            WriteCsvLine(writer, "OK", serviceUri, domain, error: null);
         }
+    }
+
+    private static void WriteCsvHeader(StreamWriter writer)
+    {
+        writer.WriteLine($"result,host,serviceUri,domain,error,filename");
+    }
+
+    private static void WriteCsvLine(StreamWriter writer, string result, Uri? serviceUri, string domain, string? error, string? filename = null)
+    {
+        writer.WriteLine($"{result},{GetCsvValue(serviceUri?.Host)},{GetCsvValue(serviceUri)},{GetCsvValue(domain)},\"{GetCsvValue(error?.Replace('"', '\''))}\",{GetCsvValue(filename)}");
     }
 
     private static string GetCsvValue(object? value)
@@ -222,29 +236,23 @@ public class RdapClientTest
         {
             return string.Empty;
         }
-        return $"\"{value}\"";
+
+        return $"{value}";
     }
 
     private async Task LookupDomainAsync(
         RdapClient client,
         Uri uri,
-        string? domain,
+        string domain,
         HashSet<string> hosts,
         StreamWriter writer,
         int threadIndex)
     {
-        if (hosts.Contains(uri.Host))
-        {
-            return;
-        }
-
-        hosts.Add(uri.Host);
-
         Console.WriteLine($"Looking up domain {uri}");
         var (success, result) = await TryExecuteLookupAsync(
             () => client.DomainLookupAsync(uri),
             uri,
-            null,
+            domain,
             writer,
             threadIndex).ConfigureAwait(false);
         if (success && result != null)
@@ -256,7 +264,7 @@ public class RdapClientTest
     private async Task ProcessDomainResponseAsync(
         RdapClient client,
         RdapDomainLookupResponse response,
-        string? domain,
+        string domain,
         HashSet<string> hosts,
         StreamWriter writer,
         int threadIndex)
@@ -266,14 +274,30 @@ public class RdapClientTest
             return;
         }
 
-        foreach (var link in response.Links.Where(x => x.Relation == RdapLinkRelationType.Related))
+        foreach (var link in response.Links)
         {
-            var serviceUrl = link.Value ?? link.Href;
-            if (string.IsNullOrEmpty(serviceUrl))
+            var value = link.Value ?? link.Href;
+            if (string.IsNullOrEmpty(value))
             {
                 continue;
             }
-            await LookupDomainAsync(client, new Uri(serviceUrl), domain, hosts, writer, threadIndex).ConfigureAwait(false);
+
+            if (!value.EndsWith($"/domain/{domain}", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;                
+            }
+
+            var serviceUri = new Uri(value);
+            var host = serviceUri.Host.ToUpperInvariant();
+
+            if (hosts.Contains(host))
+            {
+                continue;
+            }
+
+            hosts.Add(host);
+
+            await LookupDomainAsync(client, serviceUri, domain, hosts, writer, threadIndex).ConfigureAwait(false);
         }
     }
 }

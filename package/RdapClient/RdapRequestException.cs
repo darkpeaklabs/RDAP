@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -14,6 +14,10 @@ namespace DarkPeakLabs.Rdap
         public string ReasonPhrase { get; private set; }
 
         public HttpResponseHeaders ResponseHeaders { get; private set; }
+        public Version Version { get; }
+        public HttpRequestHeaders RequestHeaders { get; }
+        public HttpMethod RequestMethod { get; }
+        public Uri RequestUri { get; }
 
         public RdapRequestException()
         {
@@ -34,6 +38,10 @@ namespace DarkPeakLabs.Rdap
             StatusCode = response.StatusCode;
             ReasonPhrase = response.ReasonPhrase;
             ResponseHeaders = response.Headers;
+            Version = response.Version;
+            RequestHeaders = response.RequestMessage.Headers;
+            RequestMethod = response.RequestMessage.Method;
+            RequestUri = response.RequestMessage.RequestUri;
         }
 
         public override string ToString()

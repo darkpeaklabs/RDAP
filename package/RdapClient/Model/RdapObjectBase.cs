@@ -1,4 +1,4 @@
-﻿using DarkPeakLabs.Rdap.Values.Json;
+﻿using DarkPeakLabs.Rdap.Values;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -25,31 +25,31 @@ namespace DarkPeakLabs.Rdap
         /// an array of entity objects
         /// </summary>
         [JsonPropertyName("entities")]
-        public IReadOnlyCollection<RdapEntity> Entities { get; set; }
+        public IReadOnlyList<RdapEntity> Entities { get; set; }
 
         /// <summary>
         /// denotes information about the object class that contains it(see Section 5 regarding object classes)
         /// </summary>
         [JsonPropertyName("remarks")]
-        public IReadOnlyCollection<RdapRemark> Remarks { get; set; }
+        public IReadOnlyList<RdapRemark> Remarks { get; set; }
 
         /// <summary>
         /// links to other resources on the Internet
         /// </summary>
         [JsonPropertyName("links")]
-        public IReadOnlyCollection<RdapLink> Links { get; set; }
+        public IReadOnlyList<RdapLink> Links { get; set; }
 
         /// <summary>
         /// events that have occurred on an instance of an object class (see Section 5 regarding object classes)
         /// </summary>
         [JsonPropertyName("events")]
-        public IReadOnlyCollection<RdapEvent> Events { get; set; }
+        public IReadOnlyList<RdapEvent> Events { get; set; }
 
         /// <summary>
         /// an array of strings indicating the state of a registered object
         /// </summary>
         [JsonPropertyName("status")]
-        public IReadOnlyCollection<RdapStatus> Status { get; set; }
+        public IReadOnlyList<RdapStatus> Status { get; set; }
 
         /// <summary>
         /// a simple string containing the fully qualified host name or IP address of the WHOIS [RFC3912] server where the containing object instance may be found

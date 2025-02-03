@@ -14,13 +14,13 @@ namespace DarkPeakLabs.Rdap
         /// an array of variant objects
         /// </summary>
         [JsonPropertyName("variants")]
-        public IReadOnlyCollection<RdapDomainVariant> Variants { get; set; }
+        public IReadOnlyList<RdapDomainVariant> Variants { get; set; }
 
         /// <summary>
         /// an array of nameserver objects
         /// </summary>
         [JsonPropertyName("nameservers")]
-        public IReadOnlyCollection<RdapNameServer> NameServers { get; set; }
+        public IReadOnlyList<RdapNameServer> NameServers { get; set; }
 
         /// <summary>
         /// an object representing secure DNS record
@@ -32,7 +32,7 @@ namespace DarkPeakLabs.Rdap
         /// List of public identifiers to an object class
         /// </summary>
         [JsonPropertyName("publicIds")]
-        public IReadOnlyCollection<RdapPublicId> PublicIds { get; set; }
+        public IReadOnlyList<RdapPublicId> PublicIds { get; set; }
 
         /// <summary>
         /// represents the IP network for which a reverse DNS domain is referenced

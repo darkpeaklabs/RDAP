@@ -1,5 +1,4 @@
-﻿using DarkPeakLabs.Rdap.Values.Json;
-using Microsoft.Extensions.Logging;
+﻿using DarkPeakLabs.Rdap.Values;
 
 namespace DarkPeakLabs.Rdap.Serialization
 {
@@ -9,40 +8,17 @@ namespace DarkPeakLabs.Rdap.Serialization
         /// Maps unregistered remark and notice type values seen in the field to IANA RDAP JSON values.
         /// <see cref="https://tools.ietf.org/html/draft-blanchet-regext-rdap-deployfindings-05">Draft: RDAP Deployment Findings and Update</see>
         /// </summary>
-        public static bool TryMapToRdap(string value, out RdapNoticeAndRemarkType result, ILogger logger = null)
+        public static bool TryMapToRdap(string value, out RdapNoticeAndRemarkType result)
         {
-            switch (value.ToUpperInvariant())
+            result = value.ToUpperInvariant() switch
             {
-                case "OBJECT TRUNCATED DUE TO SERVER POLICY":
-                    result = RdapNoticeAndRemarkType.ObjectTruncatedDueToAuthorization;
-                    break;
-
-                case "RESPONSE TRUNCATED DUE TO AUTHORIZATION":
-                    result = RdapNoticeAndRemarkType.ObjectTruncatedDueToAuthorization;
-                    break;
-
-                case "OBJECT TRUNCATED DUE TO AUTHORIZATION":
-                    result = RdapNoticeAndRemarkType.ObjectTruncatedDueToAuthorization;
-                    break;
-
-                case "OBJECT REDACTED DUE TO AUTHORIZATION":
-                    result = RdapNoticeAndRemarkType.ObjectTruncatedDueToAuthorization;
-                    break;
-
-                default:
-                    result = RdapNoticeAndRemarkType.Unknown;
-                    break;
+                "OBJECT TRUNCATED DUE TO SERVER POLICY" => RdapNoticeAndRemarkType.ObjectTruncatedDueToAuthorization,
+                "RESPONSE TRUNCATED DUE TO AUTHORIZATION" => RdapNoticeAndRemarkType.ObjectTruncatedDueToAuthorization,
+                "OBJECT TRUNCATED DUE TO AUTHORIZATION" => RdapNoticeAndRemarkType.ObjectTruncatedDueToAuthorization,
+                "OBJECT REDACTED DUE TO AUTHORIZATION" => RdapNoticeAndRemarkType.ObjectTruncatedDueToAuthorization,
+                _ => RdapNoticeAndRemarkType.Unknown,
             };
-
-            if (result != RdapNoticeAndRemarkType.Unknown)
-            {
-                logger?.LogDebug("Remark/Notice type string value {Value} mapped to value {Enum}", value, result);
-            }
-            else
-            {
-                logger?.LogWarning("Unable to map Remark/Notice string value {Value} to RDAP JSON value", value);
-            }
-
+ 
             return result != RdapNoticeAndRemarkType.Unknown;
         }
     }

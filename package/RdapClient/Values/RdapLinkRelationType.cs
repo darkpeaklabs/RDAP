@@ -1,6 +1,6 @@
-//Generated file from IANA registry
+// Generated file from IANA registry (02/02/2025 10:42:36)
 using System.ComponentModel.DataAnnotations;
-namespace DarkPeakLabs.Rdap.Values.Json
+namespace DarkPeakLabs.Rdap.Values
 {
 	public enum RdapLinkRelationType
 	{
@@ -17,6 +17,12 @@ namespace DarkPeakLabs.Rdap.Values.Json
 		About,
 
 		/// <summary>
+		/// Asserts that the link target provides an access control resource for the link context.
+		/// </summary>
+		[Display(Name = "Acl", Description = "Asserts that the link target provides an access control resource for the link context.")]
+		Acl,
+
+		/// <summary>
 		/// Refers to a substitute for this context
 		/// </summary>
 		[Display(Name = "Alternate", Description = "Refers to a substitute for this context")]
@@ -27,6 +33,12 @@ namespace DarkPeakLabs.Rdap.Values.Json
 		/// </summary>
 		[Display(Name = "Amphtml", Description = "Used to reference alternative content that uses the AMP profile of the HTML format.")]
 		Amphtml,
+
+		/// <summary>
+		/// Refers to a list of APIs available from the publisher of the link context.
+		/// </summary>
+		[Display(Name = "Api-Catalog", Description = "Refers to a list of APIs available from the publisher of the link context.")]
+		ApiCatalog,
 
 		/// <summary>
 		/// Refers to an appendix.
@@ -71,6 +83,12 @@ namespace DarkPeakLabs.Rdap.Values.Json
 		Bookmark,
 
 		/// <summary>
+		/// This link relation identifies the C2PA Manifest associated with the link context
+		/// </summary>
+		[Display(Name = "C2pa-Manifest", Description = "This link relation identifies the C2PA Manifest associated with the link context")]
+		C2paManifest,
+
+		/// <summary>
 		/// Designates the preferred version of a resource (the IRI and its contents).
 		/// </summary>
 		[Display(Name = "Canonical", Description = "Designates the preferred version of a resource (the IRI and its contents).")]
@@ -93,6 +111,12 @@ namespace DarkPeakLabs.Rdap.Values.Json
 		/// </summary>
 		[Display(Name = "Collection", Description = "The target IRI points to a resource which represents the collection resource for the context IRI.")]
 		Collection,
+
+		/// <summary>
+		/// Refers to a compression dictionary used for content encoding.
+		/// </summary>
+		[Display(Name = "Compression-Dictionary", Description = "Refers to a compression dictionary used for content encoding.")]
+		CompressionDictionary,
 
 		/// <summary>
 		/// Refers to a table of contents.
@@ -123,6 +147,12 @@ namespace DarkPeakLabs.Rdap.Values.Json
 		/// </summary>
 		[Display(Name = "Current", Description = "Refers to a resource containing the most recent item(s) in a collection of resources.")]
 		Current,
+
+		/// <summary>
+		/// Refers to a resource that is documentation (intended for human consumption) about the deprecation of the link's context.
+		/// </summary>
+		[Display(Name = "Deprecation", Description = "Refers to a resource that is documentation (intended for human consumption) about the deprecation of the link's context.")]
+		Deprecation,
 
 		/// <summary>
 		/// Refers to a resource providing information about the link's context.
@@ -213,6 +243,12 @@ namespace DarkPeakLabs.Rdap.Values.Json
 		/// </summary>
 		[Display(Name = "Hub", Description = "Refers to a hub that enables registration for notification of updates to the context.")]
 		Hub,
+
+		/// <summary>
+		/// Conveys the STUN and TURN servers that can be used by an ICE Agent to establish a connection with a peer.
+		/// </summary>
+		[Display(Name = "Ice-Server", Description = "Conveys the STUN and TURN servers that can be used by an ICE Agent to establish a connection with a peer.")]
+		IceServer,
 
 		/// <summary>
 		/// Refers to an icon representing the link's context.
@@ -341,6 +377,12 @@ namespace DarkPeakLabs.Rdap.Values.Json
 		License,
 
 		/// <summary>
+		/// The link target of a link with the \"linkset\" relation type provides a set of links, including links in which the link context of the link participates.
+		/// </summary>
+		[Display(Name = "Linkset", Description = "The link target of a link with the \"linkset\" relation type provides a set of links, including links in which the link context of the link participates.")]
+		Linkset,
+
+		/// <summary>
 		/// Refers to further information about the link's context, expressed as a LRDD (\"Link-based Resource Descriptor Document\") resource. See [RFC6415] for information about processing this relation type in host-meta documents. When used elsewhere, it refers to additional links and other metadata. Multiple instances indicate additional LRDD resources. LRDD resources MUST have an \"application/xrd+xml\" representation, and MAY have others.
 		/// </summary>
 		[Display(Name = "Lrdd", Description = "Refers to further information about the link's context, expressed as a LRDD (\"Link-based Resource Descriptor Document\") resource. See [RFC6415] for information about processing this relation type in host-meta documents. When used elsewhere, it refers to additional links and other metadata. Multiple instances indicate additional LRDD resources. LRDD resources MUST have an \"application/xrd+xml\" representation, and MAY have others.")]
@@ -357,6 +399,12 @@ namespace DarkPeakLabs.Rdap.Values.Json
 		/// </summary>
 		[Display(Name = "Mask-Icon", Description = "Refers to a mask that can be applied to the icon for the context.")]
 		MaskIcon,
+
+		/// <summary>
+		/// Links to a resource about the author of the link's context.
+		/// </summary>
+		[Display(Name = "Me", Description = "Links to a resource about the author of the link's context.")]
+		Me,
 
 		/// <summary>
 		/// Refers to a feed of personalised media recommendations relevant to the link context.
@@ -603,6 +651,12 @@ namespace DarkPeakLabs.Rdap.Values.Json
 		/// </summary>
 		[Display(Name = "Service-Meta", Description = "Identifies general metadata for the context that is primarily intended for consumption by machines.")]
 		ServiceMeta,
+
+		/// <summary>
+		/// Refers to a capability set document that defines parameters or configuration requirements for automated peering and communication-channel negotiation of the Session Initiation Protocol (SIP).
+		/// </summary>
+		[Display(Name = "Sip-Trunking-Capability", Description = "Refers to a capability set document that defines parameters or configuration requirements for automated peering and communication-channel negotiation of the Session Initiation Protocol (SIP).")]
+		SipTrunkingCapability,
 
 		/// <summary>
 		/// Refers to a resource that is within a context that is sponsored (such as advertising or another compensation agreement).

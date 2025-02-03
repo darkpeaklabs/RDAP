@@ -12,14 +12,14 @@ public class IANARdapServiceRegistryClient : RdapServiceRegistryClient
     /// <summary>
     /// Base URL for IANA RDAP service registry JSON files
     /// </summary>
-    private const string IanaBootstrapUrl = "https://data.iana.org/rdap/";
+    private const string IANABootstrapUrl = "https://data.iana.org/rdap/";
 
     /// <summary>
     /// Creates a new instance of <see cref="IANARdapServiceRegistryClient"/>
     /// </summary>
     public IANARdapServiceRegistryClient() : base()
     {
-        BaseAddress = new Uri(IanaBootstrapUrl);
+        BaseAddress = new Uri(IANABootstrapUrl);
     }
 
     /// <summary>
@@ -28,7 +28,7 @@ public class IANARdapServiceRegistryClient : RdapServiceRegistryClient
     /// <param name="handler">HTTP message handler</param>
     public IANARdapServiceRegistryClient(HttpMessageHandler handler) : base(handler)
     {
-        BaseAddress = new Uri(IanaBootstrapUrl);
+        BaseAddress = new Uri(IANABootstrapUrl);
     }
 
     /// <summary>
@@ -38,7 +38,7 @@ public class IANARdapServiceRegistryClient : RdapServiceRegistryClient
     /// <param name="disposeHandler">Dispose handler</param>
     public IANARdapServiceRegistryClient(HttpMessageHandler handler, bool disposeHandler) : base(handler, disposeHandler)
     {
-        BaseAddress = new Uri(IanaBootstrapUrl);
+        BaseAddress = new Uri(IANABootstrapUrl);
     }
 
     /// <summary>

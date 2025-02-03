@@ -1,6 +1,6 @@
-// Generated file from IANA registry (2/20/2022 10:53:44 AM)
+// Generated file from IANA registry (02/02/2025 10:42:36)
 using System.ComponentModel.DataAnnotations;
-namespace DarkPeakLabs.Rdap.Values.Json
+namespace DarkPeakLabs.Rdap.Values
 {
 	public enum RdapNoticeAndRemarkType
 	{
