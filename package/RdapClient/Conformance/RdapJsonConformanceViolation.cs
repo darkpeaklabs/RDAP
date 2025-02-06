@@ -1,17 +1,16 @@
 ﻿using System.Text.Json.Nodes;
-using DarkPeakLabs.Rdap.Conformance;
 
-namespace DarkPeakLabs.Rdap.Serialization
+namespace DarkPeakLabs.Rdap.Conformance
 {
-    internal class RdapResponseJsonConformanceViolation : RdapConformanceViolation
+    public class RdapJsonConformanceViolation : RdapConformanceViolation
     {
         public JsonNode JsonNode { get; }
 
-        internal RdapResponseJsonConformanceViolation(
+        internal RdapJsonConformanceViolation(
             RdapConformanceViolationSeverity severity,
             RdapConformanceViolationCategory category,
             string message,
-            JsonNode node):
+            JsonNode node) :
             base(severity, category, message)
         {
             JsonNode = node;

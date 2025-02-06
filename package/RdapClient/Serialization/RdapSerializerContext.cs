@@ -13,7 +13,7 @@ namespace DarkPeakLabs.Rdap.Serialization
         internal void AddJsonViolation(RdapConformanceViolationSeverity severity, JsonNode node, string message)
         {
             Conformance.AddViolation(
-                new RdapResponseJsonConformanceViolation(
+                new RdapJsonConformanceViolation(
                     severity, RdapConformanceViolationCategory.JSON,
                     message,
                     node));

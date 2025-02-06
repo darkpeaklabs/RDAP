@@ -23,3 +23,8 @@ var serviceUri = await bootstrap.FindServiceUrlAsync("example.com");
 using RdapClient service = new RdapClient();
 var result = await service.DomainLookupAsync(serviceUri, "example.com");
 ```
+
+## References
+
+- [RFC 9082: Registration Data Access Protocol (RDAP) Query Format](https://datatracker.ietf.org/doc/html/rfc9082)
+- [RFC 9083: JSON Responses for the Registration Data Access Protocol (RDAP)](https://datatracker.ietf.org/doc/html/rfc9083)
