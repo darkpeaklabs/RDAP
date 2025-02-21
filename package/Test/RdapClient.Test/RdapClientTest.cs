@@ -29,9 +29,22 @@ public class RdapClientTest
     [TestMethod]
     public void TestDomainLookup2()
     {
-        using RdapClient service = new RdapClient();
+        using RdapClient client = new RdapClient();
         //squarespace requires user-agent header
-        var result = service.DomainLookupAsync(new Uri("https://rdap.squarespace.domains"), "mixpanel.com").GetAwaiter().GetResult();
+        var result = client.DomainLookupAsync(new Uri("https://rdap.squarespace.domains"), "mixpanel.com").GetAwaiter().GetResult();
+    }
+
+        [TestMethod]
+    public void TestNameServerLookup()
+    {
+        using RdapClient client = new RdapClient();
+        var domainResult = client.DomainLookupAsync(new Uri("https://rdap.verisign.com/com/v1/"), "example.com").GetAwaiter().GetResult();
+        Assert.IsNotNull(domainResult.Value.NameServers);
+        Assert.IsTrue(domainResult.Value.NameServers.Count > 0);
+        foreach(var nameServer in domainResult.Value.NameServers)
+        {
+            var result = client.NameServerLookupAsync(new Uri("https://rdap.verisign.com/com/v1/"), nameServer.UnicodeName).GetAwaiter().GetResult();
+        }
     }
 
     [TestMethod]
