@@ -22,6 +22,13 @@ namespace DarkPeakLabs.Rdap.Test
         }
 
         [TestMethod]
+        public void TestBootstrapTld()
+        {
+            Uri url = dnsBootstrap.FindServiceUrlAsync("com").GetAwaiter().GetResult();
+            Assert.AreEqual(new Uri("https://rdap.iana.org"), url);
+        }
+
+        [TestMethod]
         public void TestBootstrapIP()
         {
             Uri url = ipBootstrap.FindServiceUrlAsync("100.64.255.46").GetAwaiter().GetResult();

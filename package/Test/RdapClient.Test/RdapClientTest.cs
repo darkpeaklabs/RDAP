@@ -43,7 +43,7 @@ public class RdapClientTest
         Assert.IsTrue(domainResult.Value.NameServers.Count > 0);
         foreach(var nameServer in domainResult.Value.NameServers)
         {
-            var result = client.NameServerLookupAsync(new Uri("https://rdap.verisign.com/com/v1/"), nameServer.UnicodeName).GetAwaiter().GetResult();
+            var result = client.NameServerLookupAsync(new Uri("https://rdap.verisign.com/com/v1/"), nameServer.UnicodeName ?? nameServer.LDHName).GetAwaiter().GetResult();
         }
     }
 
@@ -51,7 +51,7 @@ public class RdapClientTest
     public void TestDomainLookup3()
     {
         using RdapClient service = new RdapClient();
-        var result = service.DomainLookupAsync(new Uri("https://namerdap.systems"), "lastpass.com").GetAwaiter().GetResult();
+        var result = service.DomainLookupAsync(new Uri("https://rdap.cscglobal.com/dbs/rdap-api/v1/"), "lastpass.com").GetAwaiter().GetResult();
     }
 
     [TestMethod]
@@ -81,6 +81,16 @@ public class RdapClientTest
     public void TestIdnDomainLookup()
     {
         string name = "㯙㯜㯙㯟.com";
+        Uri serviceUri = bootstrap.FindServiceUrlAsync(name).GetAwaiter().GetResult();
+
+        using RdapClient service = new RdapClient();
+        var result = service.DomainLookupAsync(serviceUri, name).GetAwaiter().GetResult();
+    }
+
+    [TestMethod]
+    public void TestTldDomainLookup()
+    {
+        string name = "com";
         Uri serviceUri = bootstrap.FindServiceUrlAsync(name).GetAwaiter().GetResult();
 
         using RdapClient service = new RdapClient();

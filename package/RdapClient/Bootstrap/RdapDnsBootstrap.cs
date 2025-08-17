@@ -10,6 +10,7 @@ namespace DarkPeakLabs.Rdap.Bootstrap;
 public class RdapDnsBootstrap : RdapBootstrap
 {
     private readonly IdnMapping idnMapping = new IdnMapping();
+    private readonly static Uri ianaRdapServiceUrl = new Uri("https://rdap.iana.org");
 
     public RdapDnsBootstrap(ILogger logger = null): base(logger)
     {
@@ -20,11 +21,18 @@ public class RdapDnsBootstrap : RdapBootstrap
     {
         _ = value ?? throw new ArgumentNullException(nameof(value));
 
-        var serviceDictionary = await GetServiceDictionaryAsync().ConfigureAwait(false);
-
         // do lookup from lowest level domain name up
         int dotIndex;
         value = idnMapping.GetAscii(value).ToUpperInvariant();
+
+        if (!value.TrimEnd('.').Contains('.', StringComparison.Ordinal))
+        {
+            // return IANA RDAP service URL for TLDs (domain name with only a single section)
+            return ianaRdapServiceUrl;
+        }
+
+        var serviceDictionary = await GetServiceDictionaryAsync().ConfigureAwait(false);
+
         do
         {
             if (serviceDictionary.TryGetValue(value, out var serviceUrlList) && serviceUrlList.Count > 0)

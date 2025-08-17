@@ -5,7 +5,7 @@
 	  <AssemblyName>DarkPeakLabs.RdapClient</AssemblyName>
 
 	  <PackageId>DarkPeakLabs.RdapClient</PackageId>
-	  <Version>1.1.1</Version>
+	  <Version>1.2.0</Version>
 	  <Authors>DarkPeakLabs</Authors>
 	  <Company>DarkPeakLabs</Company>
 	  <Product>DarkPeakLabs.RdapClient</Product>
